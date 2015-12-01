@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Images\WPFSpark.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,14 +128,7 @@
     <Resource Include="Resources\Images\wpfspark_title_512x128.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\FluidPivotPanel.png" />
-    <Resource Include="Resources\Images\FluidProgressBar.png" />
-    <Resource Include="Resources\Images\FluidStatusBar.png" />
-    <Resource Include="Resources\Images\FluidWrapPanel.png" />
-    <Resource Include="Resources\Images\Menu.png" />
-    <Resource Include="Resources\Images\SparkWindow.png" />
-    <Resource Include="Resources\Images\Sprocket.png" />
-    <Resource Include="Resources\Images\ToggleSwitch.png" />
+    <Resource Include="Resources\Images\WPFSpark.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
