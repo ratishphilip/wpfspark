@@ -33,6 +33,10 @@ using System.Windows.Media;
 
 namespace WPFSpark
 {
+    /// <summary>
+    /// Represents a border whose contents are clipped within the bounds
+    /// of the border. The border may have rounded corners.
+    /// </summary>
     internal class ClipBorder : Decorator
     {
         #region Fields
@@ -615,6 +619,21 @@ namespace WPFSpark
 
         private struct BorderInfo
         {
+            #region Fields
+
+            internal readonly double LeftTop;
+            internal readonly double TopLeft;
+            internal readonly double TopRight;
+            internal readonly double RightTop;
+            internal readonly double RightBottom;
+            internal readonly double BottomRight;
+            internal readonly double BottomLeft;
+            internal readonly double LeftBottom;
+
+            #endregion
+
+            #region Construction / Initialization
+
             /// <summary>
             /// Encapsulates the details of each of the core points of the border which is calculated
             /// based on the given CornerRadius, BorderThickness, Padding and a flag to indicate whether
@@ -684,14 +703,7 @@ namespace WPFSpark
                 }
             }
 
-            internal double LeftTop;
-            internal double TopLeft;
-            internal double TopRight;
-            internal double RightTop;
-            internal double RightBottom;
-            internal double BottomRight;
-            internal double BottomLeft;
-            internal double LeftBottom;
+            #endregion
         }
 
         #endregion 

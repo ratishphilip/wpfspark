@@ -279,7 +279,13 @@ namespace WPFSparkClient.NET46
         /// </summary>
         public static readonly DependencyProperty UseRandomChildSizeProperty =
             DependencyProperty.Register("UseRandomChildSize", typeof(bool), typeof(MainWindow),
-                new FrameworkPropertyMetadata(false));
+                new FrameworkPropertyMetadata(false, OnRandomChildSizeChanged));
+
+        private static void OnRandomChildSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var window = d as MainWindow;
+            window?.RefreshFluidWrapPanel();
+        }
 
         /// <summary>
         /// Gets or sets the UseRandomChildSize property. This dependency property 

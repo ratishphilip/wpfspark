@@ -26,21 +26,6 @@
 // WPFSpark v1.2
 // 
 
-
-#region File Header
-
-// -------------------------------------------------------------------------------
-// 
-// This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
-//
-// Author: Ratish Philip
-// 
-// WPFSpark v1.2
-//
-// -------------------------------------------------------------------------------
-
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Timers;
@@ -61,8 +46,6 @@ namespace WPFSpark
         private static readonly Color DEFAULT_TICK_COLOR = Color.FromArgb((byte)255, (byte)58, (byte)58, (byte)58);
         private const double DEFAULT_TICK_WIDTH = 3;
         private const int DEFAULT_TICK_COUNT = 12;
-        private const double MINIMUM_INNER_RADIUS = 5;
-        private const double MINIMUM_OUTER_RADIUS = 8;
         private readonly Size MINIMUM_CONTROL_SIZE = new Size(28, 28);
         private const double MINIMUM_PEN_WIDTH = 2;
         private const double DEFAULT_START_ANGLE = 270;
@@ -123,6 +106,61 @@ namespace WPFSpark
         #endregion
 
         #region Dependency Properties
+
+        #region AlphaTicksPercentage
+
+        /// <summary>
+        /// AlphaTicksPercentage Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty AlphaTicksPercentageProperty =
+            DependencyProperty.Register("AlphaTicksPercentage", typeof(double), typeof(SprocketControl),
+                new FrameworkPropertyMetadata(100.0, OnAlphaTicksPercentageChanged, CoerceAlphaTicksPercentage));
+
+        /// <summary>
+        /// Gets or sets the AlphaTicksPercentage property. This dependency property 
+        /// indicates the percentage of total ticks which must be considered for step by step reduction
+        /// of the alpha value. The remaining ticks remain at the LowestAlpha value.
+        /// </summary>
+        public double AlphaTicksPercentage
+        {
+            get { return (double)GetValue(AlphaTicksPercentageProperty); }
+            set { SetValue(AlphaTicksPercentageProperty, value); }
+        }
+
+        /// <summary>
+        /// Handles changes to the AlphaTicksPercentage property.
+        /// </summary>
+        private static void OnAlphaTicksPercentageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sprocket = (SprocketControl)d;
+            var oldAlphaTicksPercentage = (double)e.OldValue;
+            var newAlphaTicksPercentage = sprocket.AlphaTicksPercentage;
+            sprocket.OnAlphaTicksPercentageChanged(oldAlphaTicksPercentage, newAlphaTicksPercentage);
+        }
+
+        /// <summary>
+        /// Provides derived classes an opportunity to handle changes to the AlphaTicksPercentage property.
+        /// </summary>
+        protected void OnAlphaTicksPercentageChanged(double oldAlphaTicksPercentage, double newAlphaTicksPercentage)
+        {
+        }
+
+        /// <summary>
+        /// Coerces the AlphaTicksPercentage value.
+        /// </summary>
+        private static object CoerceAlphaTicksPercentage(DependencyObject d, object value)
+        {
+            var desiredAlphaTicksPercentage = (double)value;
+
+            if (desiredAlphaTicksPercentage > 100.0)
+                desiredAlphaTicksPercentage = 100.0;
+            else if (desiredAlphaTicksPercentage < ALPHA_TICK_PERCENTAGE_LOWER_LIMIT)
+                desiredAlphaTicksPercentage = ALPHA_TICK_PERCENTAGE_LOWER_LIMIT;
+
+            return desiredAlphaTicksPercentage;
+        }
+
+        #endregion
 
         #region Interval
 
@@ -227,6 +265,164 @@ namespace WPFSpark
                 Stop();
                 InvalidateVisual();
             }
+        }
+
+        #endregion
+
+        #region InnerRadius
+
+        /// <summary>
+        /// InnerRadius Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty InnerRadiusProperty =
+            DependencyProperty.Register("InnerRadius", typeof(double), typeof(SprocketControl),
+                new FrameworkPropertyMetadata(MINIMUM_INNER_RADIUS_FACTOR, OnInnerRadiusChanged, CoerceInnerRadius));
+
+        /// <summary>
+        /// Gets or sets the InnerRadius property. This dependency property 
+        /// indicates the ratio of the Inner Radius to the Width of the SprocketControl.
+        /// </summary>
+        public double InnerRadius
+        {
+            get { return (double)GetValue(InnerRadiusProperty); }
+            set { SetValue(InnerRadiusProperty, value); }
+        }
+
+        /// <summary>
+        /// Handles changes to the InnerRadius property.
+        /// </summary>
+        private static void OnInnerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sprocket = (SprocketControl)d;
+            var oldInnerRadius = (double)e.OldValue;
+            var newInnerRadius = sprocket.InnerRadius;
+            sprocket.OnInnerRadiusChanged(oldInnerRadius, newInnerRadius);
+        }
+
+        /// <summary>
+        /// Provides derived classes an opportunity to handle changes to the InnerRadius property.
+        /// </summary>
+        protected void OnInnerRadiusChanged(double oldInnerRadius, double newInnerRadius)
+        {
+            // Recalculate the spoke points
+            CalculateSpokesPoints();
+        }
+
+        /// <summary>
+        /// Coerces the InnerRadius value.
+        /// </summary>
+        private static object CoerceInnerRadius(DependencyObject d, object value)
+        {
+            var sprocket = (SprocketControl)d;
+            var desiredInnerRadius = (double)value;
+
+            return desiredInnerRadius;
+        }
+
+        #endregion
+
+        #region LowestAlpha
+
+        /// <summary>
+        /// LowestAlpha Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty LowestAlphaProperty =
+            DependencyProperty.Register("LowestAlpha", typeof(Int32), typeof(SprocketControl),
+                new FrameworkPropertyMetadata(ALPHA_LOWER_LIMIT, OnLowestAlphaChanged, CoerceLowestAlpha));
+
+        /// <summary>
+        /// Gets or sets the LowestAlpha property. This dependency property 
+        /// indicates the lowest Opacity value that must be used while rendering the SprocketControl's spokes.
+        /// </summary>
+        public Int32 LowestAlpha
+        {
+            get { return (Int32)GetValue(LowestAlphaProperty); }
+            set { SetValue(LowestAlphaProperty, value); }
+        }
+
+        /// <summary>
+        /// Handles changes to the LowestAlpha property.
+        /// </summary>
+        private static void OnLowestAlphaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sprocket = (SprocketControl)d;
+            var oldLowestAlpha = (Int32)e.OldValue;
+            var newLowestAlpha = sprocket.LowestAlpha;
+            sprocket.OnLowestAlphaChanged(oldLowestAlpha, newLowestAlpha);
+        }
+
+        /// <summary>
+        /// Provides derived classes an opportunity to handle changes to the LowestAlpha property.
+        /// </summary>
+        protected void OnLowestAlphaChanged(Int32 oldLowestAlpha, Int32 newLowestAlpha)
+        {
+        }
+
+        /// <summary>
+        /// Coerces the LowestAlpha value.
+        /// </summary>
+        private static object CoerceLowestAlpha(DependencyObject d, object value)
+        {
+            var desiredLowestAlpha = (Int32)value;
+
+            if (desiredLowestAlpha < ALPHA_LOWER_LIMIT)
+                desiredLowestAlpha = ALPHA_LOWER_LIMIT;
+            else if (desiredLowestAlpha > ALPHA_UPPER_LIMIT)
+                desiredLowestAlpha = ALPHA_UPPER_LIMIT;
+
+            return desiredLowestAlpha;
+        }
+
+        #endregion
+
+        #region OuterRadius
+
+        /// <summary>
+        /// OuterRadius Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty OuterRadiusProperty =
+            DependencyProperty.Register("OuterRadius", typeof(double), typeof(SprocketControl),
+                new FrameworkPropertyMetadata(MINIMUM_OUTER_RADIUS_FACTOR, OnOuterRadiusChanged, CoerceOuterRadius));
+
+        /// <summary>
+        /// Gets or sets the OuterRadius property. This dependency property 
+        /// indicates the ratio of the Outer Width to the width of the SprocketControl.
+        /// </summary>
+        public double OuterRadius
+        {
+            get { return (double)GetValue(OuterRadiusProperty); }
+            set { SetValue(OuterRadiusProperty, value); }
+        }
+
+        /// <summary>
+        /// Handles changes to the OuterRadius property.
+        /// </summary>
+        private static void OnOuterRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sprocket = (SprocketControl)d;
+            var oldOuterRadius = (double)e.OldValue;
+            var newOuterRadius = sprocket.OuterRadius;
+            sprocket.OnOuterRadiusChanged(oldOuterRadius, newOuterRadius);
+        }
+
+        /// <summary>
+        /// Provides derived classes an opportunity to handle changes to the OuterRadius property.
+        /// </summary>
+        protected void OnOuterRadiusChanged(double oldOuterRadius, double newOuterRadius)
+        {
+            // Recalculate the spoke points
+            CalculateSpokesPoints();
+        }
+
+        /// <summary>
+        /// Coerces the OuterRadius value.
+        /// </summary>
+        private static object CoerceOuterRadius(DependencyObject d, object value)
+        {
+            var sprocket = (SprocketControl)d;
+            var desiredOuterRadius = (double)value;
+
+            return desiredOuterRadius;
         }
 
         #endregion
@@ -580,220 +776,6 @@ namespace WPFSpark
         }
 
         #endregion
-
-        #region LowestAlpha
-
-        /// <summary>
-        /// LowestAlpha Dependency Property
-        /// </summary>
-        public static readonly DependencyProperty LowestAlphaProperty =
-            DependencyProperty.Register("LowestAlpha", typeof(Int32), typeof(SprocketControl),
-                new FrameworkPropertyMetadata(ALPHA_LOWER_LIMIT, OnLowestAlphaChanged, CoerceLowestAlpha));
-
-        /// <summary>
-        /// Gets or sets the LowestAlpha property. This dependency property 
-        /// indicates the lowest Opacity value that must be used while rendering the SprocketControl's spokes.
-        /// </summary>
-        public Int32 LowestAlpha
-        {
-            get { return (Int32)GetValue(LowestAlphaProperty); }
-            set { SetValue(LowestAlphaProperty, value); }
-        }
-
-        /// <summary>
-        /// Handles changes to the LowestAlpha property.
-        /// </summary>
-        private static void OnLowestAlphaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var sprocket = (SprocketControl)d;
-            var oldLowestAlpha = (Int32)e.OldValue;
-            var newLowestAlpha = sprocket.LowestAlpha;
-            sprocket.OnLowestAlphaChanged(oldLowestAlpha, newLowestAlpha);
-        }
-
-        /// <summary>
-        /// Provides derived classes an opportunity to handle changes to the LowestAlpha property.
-        /// </summary>
-        protected void OnLowestAlphaChanged(Int32 oldLowestAlpha, Int32 newLowestAlpha)
-        {
-        }
-
-        /// <summary>
-        /// Coerces the LowestAlpha value.
-        /// </summary>
-        private static object CoerceLowestAlpha(DependencyObject d, object value)
-        {
-            var desiredLowestAlpha = (Int32)value;
-
-            if (desiredLowestAlpha < ALPHA_LOWER_LIMIT)
-                desiredLowestAlpha = ALPHA_LOWER_LIMIT;
-            else if (desiredLowestAlpha > ALPHA_UPPER_LIMIT)
-                desiredLowestAlpha = ALPHA_UPPER_LIMIT;
-
-            return desiredLowestAlpha;
-        }
-
-        #endregion
-
-        #region AlphaTicksPercentage
-
-        /// <summary>
-        /// AlphaTicksPercentage Dependency Property
-        /// </summary>
-        public static readonly DependencyProperty AlphaTicksPercentageProperty =
-            DependencyProperty.Register("AlphaTicksPercentage", typeof(double), typeof(SprocketControl),
-                new FrameworkPropertyMetadata(100.0, OnAlphaTicksPercentageChanged, CoerceAlphaTicksPercentage));
-
-        /// <summary>
-        /// Gets or sets the AlphaTicksPercentage property. This dependency property 
-        /// indicates the percentage of total ticks which must be considered for step by step reduction
-        /// of the alpha value. The remaining ticks remain at the LowestAlpha value.
-        /// </summary>
-        public double AlphaTicksPercentage
-        {
-            get { return (double)GetValue(AlphaTicksPercentageProperty); }
-            set { SetValue(AlphaTicksPercentageProperty, value); }
-        }
-
-        /// <summary>
-        /// Handles changes to the AlphaTicksPercentage property.
-        /// </summary>
-        private static void OnAlphaTicksPercentageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var sprocket = (SprocketControl)d;
-            var oldAlphaTicksPercentage = (double)e.OldValue;
-            var newAlphaTicksPercentage = sprocket.AlphaTicksPercentage;
-            sprocket.OnAlphaTicksPercentageChanged(oldAlphaTicksPercentage, newAlphaTicksPercentage);
-        }
-
-        /// <summary>
-        /// Provides derived classes an opportunity to handle changes to the AlphaTicksPercentage property.
-        /// </summary>
-        protected void OnAlphaTicksPercentageChanged(double oldAlphaTicksPercentage, double newAlphaTicksPercentage)
-        {
-        }
-
-        /// <summary>
-        /// Coerces the AlphaTicksPercentage value.
-        /// </summary>
-        private static object CoerceAlphaTicksPercentage(DependencyObject d, object value)
-        {
-            var desiredAlphaTicksPercentage = (double)value;
-
-            if (desiredAlphaTicksPercentage > 100.0)
-                desiredAlphaTicksPercentage = 100.0;
-            else if (desiredAlphaTicksPercentage < ALPHA_TICK_PERCENTAGE_LOWER_LIMIT)
-                desiredAlphaTicksPercentage = ALPHA_TICK_PERCENTAGE_LOWER_LIMIT;
-
-            return desiredAlphaTicksPercentage;
-        }
-
-        #endregion
-
-        #region InnerRadius
-
-        /// <summary>
-        /// InnerRadius Dependency Property
-        /// </summary>
-        public static readonly DependencyProperty InnerRadiusProperty =
-            DependencyProperty.Register("InnerRadius", typeof(double), typeof(SprocketControl),
-                new FrameworkPropertyMetadata(MINIMUM_INNER_RADIUS_FACTOR, OnInnerRadiusChanged, CoerceInnerRadius));
-
-        /// <summary>
-        /// Gets or sets the InnerRadius property. This dependency property 
-        /// indicates the ratio of the Inner Radius to the Width of the SprocketControl.
-        /// </summary>
-        public double InnerRadius
-        {
-            get { return (double)GetValue(InnerRadiusProperty); }
-            set { SetValue(InnerRadiusProperty, value); }
-        }
-
-        /// <summary>
-        /// Handles changes to the InnerRadius property.
-        /// </summary>
-        private static void OnInnerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var sprocket = (SprocketControl)d;
-            var oldInnerRadius = (double)e.OldValue;
-            var newInnerRadius = sprocket.InnerRadius;
-            sprocket.OnInnerRadiusChanged(oldInnerRadius, newInnerRadius);
-        }
-
-        /// <summary>
-        /// Provides derived classes an opportunity to handle changes to the InnerRadius property.
-        /// </summary>
-        protected void OnInnerRadiusChanged(double oldInnerRadius, double newInnerRadius)
-        {
-            // Recalculate the spoke points
-            CalculateSpokesPoints();
-        }
-
-        /// <summary>
-        /// Coerces the InnerRadius value.
-        /// </summary>
-        private static object CoerceInnerRadius(DependencyObject d, object value)
-        {
-            var sprocket = (SprocketControl)d;
-            var desiredInnerRadius = (double)value;
-
-            return desiredInnerRadius;
-        }
-
-        #endregion
-
-        #region OuterRadius
-
-        /// <summary>
-        /// OuterRadius Dependency Property
-        /// </summary>
-        public static readonly DependencyProperty OuterRadiusProperty =
-            DependencyProperty.Register("OuterRadius", typeof(double), typeof(SprocketControl),
-                new FrameworkPropertyMetadata(MINIMUM_OUTER_RADIUS_FACTOR, OnOuterRadiusChanged, CoerceOuterRadius));
-
-        /// <summary>
-        /// Gets or sets the OuterRadius property. This dependency property 
-        /// indicates the ratio of the Outer Width to the width of the SprocketControl.
-        /// </summary>
-        public double OuterRadius
-        {
-            get { return (double)GetValue(OuterRadiusProperty); }
-            set { SetValue(OuterRadiusProperty, value); }
-        }
-
-        /// <summary>
-        /// Handles changes to the OuterRadius property.
-        /// </summary>
-        private static void OnOuterRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var sprocket = (SprocketControl)d;
-            var oldOuterRadius = (double)e.OldValue;
-            var newOuterRadius = sprocket.OuterRadius;
-            sprocket.OnOuterRadiusChanged(oldOuterRadius, newOuterRadius);
-        }
-
-        /// <summary>
-        /// Provides derived classes an opportunity to handle changes to the OuterRadius property.
-        /// </summary>
-        protected void OnOuterRadiusChanged(double oldOuterRadius, double newOuterRadius)
-        {
-            // Recalculate the spoke points
-            CalculateSpokesPoints();
-        }
-
-        /// <summary>
-        /// Coerces the OuterRadius value.
-        /// </summary>
-        private static object CoerceOuterRadius(DependencyObject d, object value)
-        {
-            var sprocket = (SprocketControl)d;
-            var desiredOuterRadius = (double)value;
-
-            return desiredOuterRadius;
-        }
-
-        #endregion
-
 
         #endregion
 

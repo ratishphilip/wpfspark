@@ -149,7 +149,7 @@
                        Name="textBlock1"
                        Text="{Binding ElementName=sprocketControl3, Path=Progress}"
                        VerticalAlignment="Top"
-                       Foreground="White"
+                       Foreground="Black"
                        FontSize="16"
                        Visibility="Hidden" />
 
@@ -160,7 +160,7 @@
                        Name="textBlock2"
                        Text="{Binding ElementName=sprocketControl4, Path=Progress}"
                        VerticalAlignment="Top"
-                       Foreground="White"
+                       Foreground="Black"
                        FontSize="16"
                        Visibility="Hidden" />
             <Button Content="Start"
@@ -242,6 +242,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.OrangeRed.Style}}" />
+            
             <wpfspark:ToggleSwitch Grid.Row="2"
                                    Grid.Column="1"
                                    HorizontalAlignment="Center"
@@ -291,19 +292,24 @@
                                VerticalAlignment="Center"
                                FontSize="14"></TextBlock>
                     <ComboBox x:Name="OrientationCB"
-                              Width="150"
+                              Width="110"
                               Margin="10,0"
                               VerticalContentAlignment="Center"
                               SelectionChanged="OnOrientationChanged"></ComboBox>
-                    <CheckBox Content="Randomize Child Size"
-                              IsChecked="{Binding ElementName=window, Path=UseRandomChildSize}"
-                              Margin="40,0"
+                    <CheckBox Content="Optimize Child Placement"
+                              IsChecked="{Binding ElementName=panel, Path=OptimizeChildPlacement, Mode=TwoWay}"
+                              Margin="20,0"
                               Foreground="White"
                               VerticalAlignment="Center"></CheckBox>
-                    <Button Width="150"
+                    <CheckBox Content="Randomize Child Size"
+                              IsChecked="{Binding ElementName=window, Path=UseRandomChildSize, Mode=TwoWay}"
+                              Margin="20,0"
+                              Foreground="White"
+                              VerticalAlignment="Center"></CheckBox>
+                    <Button Width="100"
                             Height="30"
                             Content="Refresh"
-                            Margin="30,0,0,0"
+                            Margin="20,0,0,0"
                             Click="OnRefresh"></Button>
                 </StackPanel>
                 <TextBlock x:Name="debug"

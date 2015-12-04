@@ -972,14 +972,7 @@ namespace WPFSpark
             {
                 titleBar.MouseLeftButtonDown += OnTitleBarMouseDown;
             }
-
-            // PART_TitleText
-            TextBlock tb = GetChildControl<TextBlock>("PART_TitleText");
-            //if (tb == null)
-            //    return;
-
-            // Update the margin for the TitleText trigger
-            //UpdateTriggerMargin(tb, TitleMargin);
+            
             // Update the system control buttons in the window frame
             UpdateWindowFrame(WindowFrameMode);
         }
@@ -1058,7 +1051,7 @@ namespace WPFSpark
         /// <returns>Control</returns>
         protected T GetChildControl<T>(string ctrlName) where T : DependencyObject
         {
-            T ctrl = GetTemplateChild(ctrlName) as T;
+            var ctrl = GetTemplateChild(ctrlName) as T;
             return ctrl;
         }
 
@@ -1067,12 +1060,26 @@ namespace WPFSpark
         /// </summary>
         private void ToggleMaximize()
         {
-            if (WindowState == WindowState.Maximized)
-                SystemCommands.RestoreWindow(this);
-            else if (WindowState == WindowState.Normal)
-                WindowState = WindowState.Maximized;
+            switch (WindowState)
+            {
+                case WindowState.Maximized:
+                    SystemCommands.RestoreWindow(this);
+                    break;
+                case WindowState.Normal:
+                    WindowState = WindowState.Maximized;
+                    break;
+            }
         }
 
+        /// <summary>
+        /// Hook for window's messages
+        /// </summary>
+        /// <param name="hwnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <param name="handled"></param>
+        /// <returns></returns>
         private static System.IntPtr WindowProc(System.IntPtr hwnd, int msg, System.IntPtr wParam,
               System.IntPtr lParam, ref bool handled)
         {
@@ -1090,7 +1097,11 @@ namespace WPFSpark
         #endregion
 
         #region Event Handlers
-
+        /// <summary>
+        /// Handler for the SourceInitialized event
+        /// </summary>
+        /// <param name="sender">Window</param>
+        /// <param name="e">EventArgs</param>
         private void OnWindowSourceInitialized(object sender, System.EventArgs e)
         {
             System.IntPtr handle = (new System.Windows.Interop.WindowInteropHelper(this)).Handle;

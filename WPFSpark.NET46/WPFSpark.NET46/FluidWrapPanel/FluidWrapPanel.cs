@@ -379,8 +379,11 @@ namespace WPFSpark
 
         /// <summary>
         /// Gets or sets the OptimizeChildPlacement property. This dependency property 
-        /// indicates whether the placement of the children is optimized. If set to false,
-        /// each child occupies the same (or greater) row and/or column than the previous child .
+        /// indicates whether the placement of the children is optimized. 
+        /// If set to true, the child is placed at the first available position from 
+        /// the beginning of the FluidWrapPanel. 
+        /// If set to false, each child occupies the same (or greater) row and/or column
+        /// than the previous child.
         /// </summary>
         public bool OptimizeChildPlacement
         {

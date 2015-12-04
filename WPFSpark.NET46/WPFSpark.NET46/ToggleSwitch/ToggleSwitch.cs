@@ -814,7 +814,7 @@ namespace WPFSpark
 
         /// <summary>
         /// Gets or sets the OptimizeThumbRendering property. This dependency property 
-        /// indicates whether the ClipBorder surrounding the ToggleSwitch should enable
+        /// indicates whether the ClipBorder surrounding the ToggleSwitch Thumb should enable
         /// OptimizeClipRendering to prevent gaps between the border and the clipped content.
         /// Set this value to False, if the ToggleSwitch ThumbBackground is Transparent or 
         /// has partial transparency. Otherwise, if the ThumbBackground is opaque, 
@@ -842,7 +842,8 @@ namespace WPFSpark
         /// indicates whether the ThumbWidthRatio should be automatically calculated
         /// based on the Width, Height and BorderThickness of the ToggleSwitch. This property has
         /// higher precedence over the ThumbWidthRatio property. If this property is set to true,
-        /// any value for ThumbWidthRatio, set by the user, will be ignored.
+        /// any value for ThumbWidthRatio, set by the user, will be ignored and ThumbWidth will
+        /// be equal to ThumbHeight.
         /// </summary>
         public bool AutoThumbWidthRatio
         {
