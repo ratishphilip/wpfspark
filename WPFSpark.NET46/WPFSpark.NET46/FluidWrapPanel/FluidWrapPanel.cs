@@ -80,8 +80,7 @@ namespace WPFSpark
         private Size _panelSize;
         private int _cellsPerLine;
         private Dictionary<UIElement, Rect> _bounds;
-        //bool isInitializeArrangeRequired = false;
-        private int _originalDragIndex;
+        private UIElement _lastExchangeElement;
 
         #endregion
 
@@ -227,7 +226,7 @@ namespace WPFSpark
         }
 
         #endregion
-        
+
         #region IsComposing
 
         /// <summary>
@@ -448,7 +447,8 @@ namespace WPFSpark
         {
             FluidItems = new ObservableCollection<UIElement>();
             _bounds = new Dictionary<UIElement, Rect>();
-            _originalDragIndex = -1;
+            _lastDragElement = null;
+            _lastExchangeElement = null;
         }
 
         #endregion
@@ -494,7 +494,7 @@ namespace WPFSpark
                 Width = Math.Max(1, (int)Math.Floor((child.DesiredSize.Width / cellSize.Width) + 0.5)),
                 Height = Math.Max(1, (int)Math.Floor((child.DesiredSize.Height / cellSize.Height) + 0.5))
             }).ToList();
-
+             
             // If all the children have the same size as the cellSize then use optimized code
             // when a child is being dragged
             _isOptimized = !childData.Any(c => (c.Width != 1) || (c.Height != 1));
@@ -767,26 +767,6 @@ namespace WPFSpark
             }
         }
 
-        /// <summary>
-        /// Moves the dragElement to the new Index
-        /// </summary>
-        /// <param name="newIndex">Index of the new location</param>
-        /// <returns>True-if dragElement was moved otherwise False</returns>
-        private bool UpdateDragElementIndex(int newIndex)
-        {
-            // Check if the dragElement is being moved to its current place
-            // If yes, then no need to proceed further. (Improves efficiency!)
-            var dragCellIndex = FluidItems.IndexOf(_dragElement);
-            if (dragCellIndex == newIndex)
-                return false;
-
-            FluidItems.RemoveAt(dragCellIndex);
-            FluidItems.Insert(newIndex, _dragElement);
-            //_originalDragIndex = newIndex;
-
-            return true;
-        }
-
         private void CreateTransitionAnimation(UIElement element, Point pos, bool showEasing = true)
         {
             //Dispatcher.BeginInvoke(new Action(() =>
@@ -871,7 +851,6 @@ namespace WPFSpark
                 child.CaptureMouse();
                 _dragElement = child;
                 _lastDragElement = null;
-                _originalDragIndex = FluidItems.IndexOf(_dragElement);
 
                 // Since we are scaling the dragElement by DragScale, the clickPoint also shifts
                 _dragStartPoint = new Point(position.X * DragScale, position.Y * DragScale);
@@ -913,13 +892,25 @@ namespace WPFSpark
                     index = FluidItems.Count - 1;
                 }
 
-                // If the dragElement is moved to a new location, then only
-                // call the updation of the layout.
-                if (UpdateDragElementIndex(index))
+                var element = FluidItems[index];
+
+                if (_dragElement == element)
                 {
-                    Debug.WriteLine("Invalidating");
-                    InvalidateVisual();
+                    _lastExchangeElement = null;
+                    return;
                 }
+
+                if (element == _lastExchangeElement)
+                {
+                    return;
+                }
+
+                _lastExchangeElement = element;
+                var dragCellIndex = FluidItems.IndexOf(_dragElement);
+                FluidItems.RemoveAt(dragCellIndex);
+                FluidItems.Insert(index, _dragElement);
+                Debug.WriteLine("Invalidating");
+                InvalidateVisual();
             });
         }
 
@@ -952,7 +943,7 @@ namespace WPFSpark
                 _lastDragElement = _dragElement;
 
                 _dragElement = null;
-                _originalDragIndex = -1;
+                _lastExchangeElement = null;
 
                 InvalidateVisual();
             });

@@ -42,7 +42,6 @@ namespace WPFSpark
         #region Fields
 
         FluidWrapPanel _parentFwPanel;
-        //OldFluidWrapPanel parentFWPanel = null;
         ListBoxItem _parentLbItem;
 
         #endregion
@@ -85,7 +84,7 @@ namespace WPFSpark
             ((FrameworkElement)AssociatedObject).Loaded += OnAssociatedObjectLoaded;
         }
 
-        void OnAssociatedObjectLoaded(object sender, RoutedEventArgs e)
+        private void OnAssociatedObjectLoaded(object sender, RoutedEventArgs e)
         {
             // Get the parent OldFluidWrapPanel and check if the AssociatedObject is
             // hosted inside a ListBoxItem (this scenario will occur if the OldFluidWrapPanel
@@ -126,14 +125,6 @@ namespace WPFSpark
                     _parentLbItem = ancestor as ListBoxItem;
                 }
 
-                //if (ancestor is OldFluidWrapPanel)
-                //{
-                //    _parentFwPanel = ancestor as OldFluidWrapPanel;
-                //    // No need to go further up
-                //    return;
-                //}
-
-                // TODO: Remove after completion
                 if (ancestor is FluidWrapPanel)
                 {
                     _parentFwPanel = ancestor as FluidWrapPanel;
@@ -184,7 +175,7 @@ namespace WPFSpark
             }
         }
 
-        async void OnPreviewMouseMove(object sender, MouseEventArgs e)
+        private async void OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             var isDragging = false;
 
@@ -220,8 +211,6 @@ namespace WPFSpark
                         isDragging = true;
                     }
                     break;
-                default:
-                    break;
             }
 
             if (!isDragging)
@@ -237,7 +226,7 @@ namespace WPFSpark
             await _parentFwPanel.FluidDragAsync(_parentLbItem ?? AssociatedObject, position, positionInParent);
         }
 
-        async void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        private async void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton != DragButton)
                 return;
