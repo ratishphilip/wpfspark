@@ -1,6 +1,6 @@
 #<img src="https://cloud.githubusercontent.com/assets/7021835/11594317/26f521d8-9a5e-11e5-8392-4c8a08cb693b.png" />
 
-**WPFSpark** is an open source project, which I started in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
+**WPFSpark** project was started by me in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
 
 **WPFSpark v1.0** was released in December 2011 followed by **WPFSpark v1.1** in January 2012. Now, after a really long gap of nearly 4 years, I am happy to announce that the next version of WPFSpark is finally released. :) It has been ported to **.NET 4.6** using **C# 6.0**.
 
@@ -22,6 +22,7 @@ WPFSpark contains the following controls
 [ToggleSwitch Details](http://www.codeproject.com/Articles/233583/WPFSpark-of-n-ToggleSwitch). Also check [this](http://www.codeproject.com/Articles/1060961/WPFSpark-v) for new features added in WPFSpark v1.2.
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362235/0d5885b4-bb77-11e5-9f4d-b4184adea8f6.png" />
+
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362238/10141a0c-bb77-11e5-9949-5021405e3334.png" />
 
 ###FluidWrapPanel
@@ -32,7 +33,7 @@ WPFSpark contains the following controls
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362226/040ef8a8-bb77-11e5-8cef-30f1c3a8d11d.png" />
 
 ###SparkWindow
-**SparkWindow** is a custom Window which has the look and feel of Windows 10 desktop window with an additional feature : Blur behind (Aero glass effect).
+**SparkWindow** is a custom Window which has the look and feel of Windows 10 desktop window with an additional feature : **Blur behind (Aero glass effect)**.
 
 [SparkWindow Details](http://www.codeproject.com/Articles/303688/WPFSpark-of-n-SparkWindow). Also check [this](http://www.codeproject.com/Articles/1060961/WPFSpark-v) for new features added in WPFSpark v1.2.
 
