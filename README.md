@@ -4,6 +4,9 @@
 
 **WPFSpark v1.0** was released in December 2011 followed by **WPFSpark v1.1** in January 2012. Now, after a really long gap of nearly 4 years, I am happy to announce that the next version of WPFSpark is finally released. :) It has been ported to **.NET 4.6** using **C# 6.0**.
 
+### WPFSpark.UWP Released
+I am really happy to announce that today (Jan 21, 2016), the WPFSpark library for Universal Windows Apps is released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
+
 ## WPFSpark Controls
 
 WPFSpark contains the following controls
