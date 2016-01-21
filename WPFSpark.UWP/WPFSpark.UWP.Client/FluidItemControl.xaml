@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="WPFSpark.UWP.Client.FluidItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:WPFSpark.UWP.Client"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+             xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
+             xmlns:wpfspark="using:WPFSpark"
+             mc:Ignorable="d"
+             x:Name="parent"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+    <Interactivity:Interaction.Behaviors>
+        <wpfspark:FluidPointerDragBehavior DragButton="MouseLeftButton"></wpfspark:FluidPointerDragBehavior>
+    </Interactivity:Interaction.Behaviors>
+    <Grid>
+        <Border x:Name="fillBorder"
+                Margin="1"
+                Background="{Binding Path=Fill, ElementName=parent}"></Border>
+        <TextBlock x:Name="numText"
+                   FontSize="18"
+                   Foreground="White"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="{Binding Path=Data, ElementName=parent}"></TextBlock>
+
+    </Grid>
+</UserControl>
