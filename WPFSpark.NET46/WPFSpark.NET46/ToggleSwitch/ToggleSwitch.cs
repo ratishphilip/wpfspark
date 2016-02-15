@@ -872,20 +872,26 @@ namespace WPFSpark
         {
             _isCalculatingLayout = false;
 
-            // Listen to the BorderThickness changed event to update the layout
-            var dpd = DependencyPropertyDescriptor.FromProperty(BorderThicknessProperty, typeof(ToggleSwitch));
-            dpd?.AddValueChanged(this, (s, e) =>
+            // Subscribe to the BorderThickness changed event to update the layout
+            EventHandler thicknessChangedEventHandler = (s, e) =>
             {
                 // Update Layout
                 InvalidateVisual();
-            });
+            };
 
-            //// Invalidate Visual when Size changes
-            //SizeChanged += (s, e) =>
-            //{
-            //    // Update Layout
-            //    InvalidateVisual();
-            //};
+            var dpd = DependencyPropertyDescriptor.FromProperty(BorderThicknessProperty, typeof(ToggleSwitch));
+            dpd?.AddValueChanged(this, thicknessChangedEventHandler);
+
+            // When unloaded, unsubscribe from BorderThickness changed event 
+            // to ensure proper disposal of ToggleSwitch
+            RoutedEventHandler unloadedEventHandler = null;
+            unloadedEventHandler = (s, e) =>
+            {
+                Unloaded -= unloadedEventHandler;
+                dpd?.RemoveValueChanged(this, thicknessChangedEventHandler);
+            };
+
+            Unloaded += unloadedEventHandler;
         }
 
         #endregion
