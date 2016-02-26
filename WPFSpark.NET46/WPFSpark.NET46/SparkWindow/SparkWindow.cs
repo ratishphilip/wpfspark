@@ -29,12 +29,17 @@
 //
 // -------------------------------------------------------------------------------
 
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Shapes;
 
 namespace WPFSpark
 {
@@ -45,15 +50,36 @@ namespace WPFSpark
     [TemplatePart(Name = "PART_Restore", Type = typeof(Button))]
     [TemplatePart(Name = "PART_Maximize", Type = typeof(Button))]
     [TemplatePart(Name = "PART_Close", Type = typeof(Button))]
+    [TemplatePart(Name = "PART_TitleBar", Type = typeof(Border))]
+    [TemplatePart(Name = "PART_Resize", Type = typeof(Grid))]
     public class SparkWindow : Window
     {
+        #region Enums
+
+        private enum ResizeDirection
+        {
+            Left = 1,
+            Right = 2,
+            Top = 3,
+            TopLeft = 4,
+            TopRight = 5,
+            Bottom = 6,
+            BottomLeft = 7,
+            BottomRight = 8,
+        }
+
+        #endregion
+
         #region Fields
 
-        Button minimizeButton = null;
-        Button restoreButton = null;
-        Button maximizeButton = null;
-        Button closeButton = null;
-        Border titleBar = null;
+        private Button _minimizeButton;
+        private Button _restoreButton;
+        private Button _maximizeButton;
+        private Button _closeButton;
+        private Border _titleBar;
+        private HwndSource _hwndSource;
+        private Grid _resizeGrid;
+        private readonly Cursor _defaultCursor;
 
         #endregion
 
@@ -843,12 +869,20 @@ namespace WPFSpark
         /// </summary>
         public SparkWindow()
         {
-            this.Loaded += (s, e) =>
+            _defaultCursor = Cursor;
+            SourceInitialized += OnWindowSourceInitialized;
+            
+            RoutedEventHandler handler = null;
+            handler = (s, e) =>
             {
+                Loaded -= handler;
+                IntPtr handle = (new WindowInteropHelper(this)).Handle;
+                HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
+                _hwndSource = (HwndSource)PresentationSource.FromVisual(this);
                 this.EnableBlur();
             };
 
-            this.SourceInitialized += OnWindowSourceInitialized;
+            Loaded += handler;
         }
 
         #endregion
@@ -875,20 +909,20 @@ namespace WPFSpark
         /// <param name="e">CancelEventArgs</param>
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (minimizeButton != null)
-                minimizeButton.Click -= OnMinimize;
+            if (_minimizeButton != null)
+                _minimizeButton.Click -= OnMinimize;
 
-            if (restoreButton != null)
-                restoreButton.Click -= OnRestore;
+            if (_restoreButton != null)
+                _restoreButton.Click -= OnRestore;
 
-            if (maximizeButton != null)
-                maximizeButton.Click -= OnMaximize;
+            if (_maximizeButton != null)
+                _maximizeButton.Click -= OnMaximize;
 
-            if (closeButton != null)
-                closeButton.Click -= OnClose;
+            if (_closeButton != null)
+                _closeButton.Click -= OnClose;
 
-            if (titleBar != null)
-                titleBar.MouseLeftButtonDown -= OnTitleBarMouseDown;
+            if (_titleBar != null)
+                _titleBar.MouseLeftButtonDown -= OnTitleBarMouseDown;
 
             base.OnClosing(e);
         }
@@ -903,34 +937,47 @@ namespace WPFSpark
         private void Unsubscribe()
         {
             // PART_Minimize
-            if (minimizeButton != null)
+            if (_minimizeButton != null)
             {
-                minimizeButton.Click -= OnMinimize;
+                _minimizeButton.Click -= OnMinimize;
             }
 
             // PART_Restore
-            if (restoreButton != null)
+            if (_restoreButton != null)
             {
-                restoreButton.Click -= OnRestore;
+                _restoreButton.Click -= OnRestore;
             }
 
             // PART_Maximize
-            if (maximizeButton != null)
+            if (_maximizeButton != null)
             {
-                maximizeButton.Click -= OnMaximize;
+                _maximizeButton.Click -= OnMaximize;
             }
 
             // PART_Close
-            if (closeButton != null)
+            if (_closeButton != null)
             {
-                closeButton.Click -= OnClose;
+                _closeButton.Click -= OnClose;
             }
 
             // PART_TitleBar
-            if (titleBar != null)
+            if (_titleBar != null)
             {
-                titleBar.MouseLeftButtonDown -= OnTitleBarMouseDown;
+                _titleBar.MouseLeftButtonDown -= OnTitleBarMouseDown;
             }
+
+            // PART_Resize
+            if (_resizeGrid != null)
+            {
+                foreach (var resizeRectangle in _resizeGrid.Children.OfType<Rectangle>())
+                {
+                    resizeRectangle.MouseEnter -= OnResizeMouseEnter;
+                    resizeRectangle.MouseLeave -= OnResizeMouseLeave;
+                    resizeRectangle.PreviewMouseLeftButtonDown -= OnResizeMouseLeftButtonDown;
+                }
+            }
+
+            SourceInitialized -= OnWindowSourceInitialized;
         }
 
         /// <summary>
@@ -939,40 +986,52 @@ namespace WPFSpark
         protected void GetTemplateParts()
         {
             // PART_Minimize
-            minimizeButton = GetChildControl<Button>("PART_Minimize");
-            if (minimizeButton != null)
+            _minimizeButton = GetChildControl<Button>("PART_Minimize");
+            if (_minimizeButton != null)
             {
-                minimizeButton.Click += OnMinimize;
+                _minimizeButton.Click += OnMinimize;
             }
 
             // PART_Restore
-            restoreButton = GetChildControl<Button>("PART_Restore");
-            if (restoreButton != null)
+            _restoreButton = GetChildControl<Button>("PART_Restore");
+            if (_restoreButton != null)
             {
-                restoreButton.Click += OnRestore;
+                _restoreButton.Click += OnRestore;
             }
 
             // PART_Maximize
-            maximizeButton = GetChildControl<Button>("PART_Maximize");
-            if (maximizeButton != null)
+            _maximizeButton = GetChildControl<Button>("PART_Maximize");
+            if (_maximizeButton != null)
             {
-                maximizeButton.Click += OnMaximize;
+                _maximizeButton.Click += OnMaximize;
             }
 
             // PART_Close
-            closeButton = GetChildControl<Button>("PART_Close");
-            if (closeButton != null)
+            _closeButton = GetChildControl<Button>("PART_Close");
+            if (_closeButton != null)
             {
-                closeButton.Click += OnClose;
+                _closeButton.Click += OnClose;
             }
 
             // PART_TitleBar
-            titleBar = GetChildControl<Border>("PART_TitleBar");
-            if (titleBar != null)
+            _titleBar = GetChildControl<Border>("PART_TitleBar");
+            if (_titleBar != null)
             {
-                titleBar.MouseLeftButtonDown += OnTitleBarMouseDown;
+                _titleBar.MouseLeftButtonDown += OnTitleBarMouseDown;
             }
-            
+
+            // PART_Resize
+            _resizeGrid = GetChildControl<Grid>("PART_Resize");
+            if (_resizeGrid != null)
+            {
+                foreach (Rectangle resizeRectangle in _resizeGrid.Children.OfType<Rectangle>())
+                {
+                    resizeRectangle.MouseEnter += OnResizeMouseEnter;
+                    resizeRectangle.MouseLeave += OnResizeMouseLeave;
+                    resizeRectangle.PreviewMouseLeftButtonDown += OnResizeMouseLeftButtonDown;
+                }
+            }
+
             // Update the system control buttons in the window frame
             UpdateWindowFrame(WindowFrameMode);
         }
@@ -988,51 +1047,51 @@ namespace WPFSpark
                 // Only close button should be visible if the mode is CanClose/PaneCanClose
                 case WindowMode.CanClose:
                 case WindowMode.PaneCanClose:
-                    if (minimizeButton != null)
-                        minimizeButton.Visibility = Visibility.Collapsed;
-                    if (maximizeButton != null)
-                        maximizeButton.Visibility = Visibility.Collapsed;
-                    if (restoreButton != null)
-                        restoreButton.Visibility = Visibility.Collapsed;
+                    if (_minimizeButton != null)
+                        _minimizeButton.Visibility = Visibility.Collapsed;
+                    if (_maximizeButton != null)
+                        _maximizeButton.Visibility = Visibility.Collapsed;
+                    if (_restoreButton != null)
+                        _restoreButton.Visibility = Visibility.Collapsed;
                     break;
 
                 // Only minimize and close buttons should be visible if the mode is Pane/CanMinimize
                 case WindowMode.Pane:
                 case WindowMode.CanMinimize:
                 default:
-                    if (minimizeButton != null)
+                    if (_minimizeButton != null)
                     {
-                        minimizeButton.Visibility = Visibility.Visible;
-                        Grid.SetColumn(minimizeButton, 2);
+                        _minimizeButton.Visibility = Visibility.Visible;
+                        Grid.SetColumn(_minimizeButton, 2);
                     }
-                    if (maximizeButton != null)
-                        maximizeButton.Visibility = Visibility.Collapsed;
-                    if (restoreButton != null)
-                        restoreButton.Visibility = Visibility.Collapsed;
+                    if (_maximizeButton != null)
+                        _maximizeButton.Visibility = Visibility.Collapsed;
+                    if (_restoreButton != null)
+                        _restoreButton.Visibility = Visibility.Collapsed;
                     break;
 
                 // All buttons - minimize, maximize and close will be visible if the mode is CanMaximize
                 case WindowMode.CanMaximize:
-                    if (minimizeButton != null)
+                    if (_minimizeButton != null)
                     {
-                        minimizeButton.Visibility = Visibility.Visible;
-                        Grid.SetColumn(minimizeButton, 1);
+                        _minimizeButton.Visibility = Visibility.Visible;
+                        Grid.SetColumn(_minimizeButton, 1);
                     }
-                    if (maximizeButton != null)
+                    if (_maximizeButton != null)
                     {
-                        maximizeButton.Visibility = Visibility.Visible;
+                        _maximizeButton.Visibility = Visibility.Visible;
                     }
                     break;
                 // All buttons - minimize, maximize and close will be hidden if the mode is CanMaximize
                 case WindowMode.ChildWindow:
-                    if (minimizeButton != null)
-                        minimizeButton.Visibility = Visibility.Collapsed;
-                    if (maximizeButton != null)
-                        maximizeButton.Visibility = Visibility.Collapsed;
-                    if (restoreButton != null)
-                        restoreButton.Visibility = Visibility.Collapsed;
-                    if (closeButton != null)
-                        closeButton.Visibility = Visibility.Collapsed;
+                    if (_minimizeButton != null)
+                        _minimizeButton.Visibility = Visibility.Collapsed;
+                    if (_maximizeButton != null)
+                        _maximizeButton.Visibility = Visibility.Collapsed;
+                    if (_restoreButton != null)
+                        _restoreButton.Visibility = Visibility.Collapsed;
+                    if (_closeButton != null)
+                        _closeButton.Visibility = Visibility.Collapsed;
                     break;
             }
 
@@ -1094,9 +1153,29 @@ namespace WPFSpark
             return (System.IntPtr)0;
         }
 
+        /// <summary>
+        /// Sends the Window Message for resize
+        /// </summary>
+        /// <param name="direction">Resize Direction</param>
+        private void ResizeWindow(ResizeDirection direction)
+        {
+            if (_hwndSource == null)
+                return;
+
+            SendMessage(_hwndSource.Handle, 0x112, (IntPtr)(61440 + direction), IntPtr.Zero);
+        }
+
+        #endregion
+
+        #region DLLImports
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 msg, IntPtr wParam, IntPtr lParam);
+
         #endregion
 
         #region Event Handlers
+
         /// <summary>
         /// Handler for the SourceInitialized event
         /// </summary>
@@ -1104,8 +1183,9 @@ namespace WPFSpark
         /// <param name="e">EventArgs</param>
         private void OnWindowSourceInitialized(object sender, System.EventArgs e)
         {
-            System.IntPtr handle = (new System.Windows.Interop.WindowInteropHelper(this)).Handle;
-            System.Windows.Interop.HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
+            IntPtr handle = (new WindowInteropHelper(this)).Handle;
+            HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
+            _hwndSource = (HwndSource)PresentationSource.FromVisual(this);
         }
 
         /// <summary>
@@ -1168,6 +1248,121 @@ namespace WPFSpark
             Unsubscribe();
             // Close the window
             SystemCommands.CloseWindow(this);
+        }
+
+        /// <summary>
+        /// Handler for the Mouse Enter event in any of the Resize rectangles
+        /// </summary>
+        /// <param name="sender">Rectangle</param>
+        /// <param name="e">MouseEventArgs</param>
+        private void OnResizeMouseEnter(object sender, MouseEventArgs e)
+        {
+            if (ResizeMode != ResizeMode.CanResize)
+                return;
+
+            var rectangle = sender as Rectangle;
+            if (rectangle == null)
+                return;
+
+            switch (rectangle.Name)
+            {
+                case "ResizeN":
+                    Cursor = Cursors.SizeNS;
+                    break;
+                case "ResizeS":
+                    Cursor = Cursors.SizeNS;
+                    break;
+                case "ResizeW":
+                    Cursor = Cursors.SizeWE;
+                    break;
+                case "ResizeE":
+                    Cursor = Cursors.SizeWE;
+                    break;
+                case "ResizeNW":
+                    Cursor = Cursors.SizeNWSE;
+                    break;
+                case "ResizeNE":
+                    Cursor = Cursors.SizeNESW;
+                    break;
+                case "ResizeSW":
+                    Cursor = Cursors.SizeNESW;
+                    break;
+                case "ResizeSE":
+                    Cursor = Cursors.SizeNWSE;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Handler for the Mouse Leave event in any of the Resize rectangles
+        /// </summary>
+        /// <param name="sender">Rectangle</param>
+        /// <param name="e">MouseEventArgs</param>
+        private void OnResizeMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (ResizeMode != ResizeMode.CanResize)
+                return;
+
+            if (Mouse.LeftButton != MouseButtonState.Pressed)
+            {
+                Cursor = _defaultCursor;
+            }
+        }
+
+        /// <summary>
+        /// Handler for the Preview Mouse Left Button Down event in any of the 
+        /// Resize rectangles
+        /// </summary>
+        /// <param name="sender">Rectangle</param>
+        /// <param name="e">MouseButtonEventArgs</param>
+        private void OnResizeMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (ResizeMode != ResizeMode.CanResize)
+                return;
+
+            var rectangle = sender as Rectangle;
+            if (rectangle == null)
+                return;
+
+            switch (rectangle.Name)
+            {
+                case "ResizeN":
+                    Cursor = Cursors.SizeNS;
+                    ResizeWindow(ResizeDirection.Top);
+                    break;
+                case "ResizeS":
+                    Cursor = Cursors.SizeNS;
+                    ResizeWindow(ResizeDirection.Bottom);
+                    break;
+                case "ResizeW":
+                    Cursor = Cursors.SizeWE;
+                    ResizeWindow(ResizeDirection.Left);
+                    break;
+                case "ResizeE":
+                    Cursor = Cursors.SizeWE;
+                    ResizeWindow(ResizeDirection.Right);
+                    break;
+                case "ResizeNW":
+                    Cursor = Cursors.SizeNWSE;
+                    ResizeWindow(ResizeDirection.TopLeft);
+                    break;
+                case "ResizeNE":
+                    Cursor = Cursors.SizeNESW;
+                    ResizeWindow(ResizeDirection.TopRight);
+                    break;
+                case "ResizeSW":
+                    Cursor = Cursors.SizeNESW;
+                    ResizeWindow(ResizeDirection.BottomLeft);
+                    break;
+                case "ResizeSE":
+                    Cursor = Cursors.SizeNWSE;
+                    ResizeWindow(ResizeDirection.BottomRight);
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

@@ -6,6 +6,7 @@
                       xmlns:wpfspark="clr-namespace:WPFSpark;assembly=WPFSpark"
                       mc:Ignorable="d"
                       x:Name="window"
+                      ResizeMode="CanResize"
                       Title="WPFSpark"
                       Height="800"
                       Width="1000">

@@ -437,6 +437,63 @@ SOFTWARE.
                               Grid.Column="0">
                 <ContentPresenter />
             </AdornerDecorator>
+
+            <Grid x:Name="PART_Resize"
+                  Grid.RowSpan="2"
+                  Panel.ZIndex="5">
+                <Rectangle x:Name="ResizeN"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           VerticalAlignment="Top"
+                           Height="5"
+                           Margin="5,0,5,0" />
+                <Rectangle x:Name="ResizeS"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           Height="5"
+                           VerticalAlignment="Bottom"
+                           Margin="5,0,5,0" />
+                <Rectangle x:Name="ResizeW"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           HorizontalAlignment="Left"
+                           Margin="0,5,0,5"
+                           Width="5" />
+                <Rectangle x:Name="ResizeE"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           Margin="0,5,0,5"
+                           Width="5"
+                           HorizontalAlignment="Right" />
+                <Rectangle x:Name="ResizeSW"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Bottom"
+                           Width="5"
+                           Height="5" />
+                <Rectangle x:Name="ResizeSE"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           VerticalAlignment="Bottom"
+                           Height="5"
+                           Width="5"
+                           HorizontalAlignment="Right" />
+                <Rectangle x:Name="ResizeNE"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           HorizontalAlignment="Right"
+                           Width="5"
+                           Height="5"
+                           VerticalAlignment="Top" />
+                <Rectangle x:Name="ResizeNW"
+                           Stroke="{x:Null}"
+                           Fill="Transparent"
+                           HorizontalAlignment="Left"
+                           Width="6"
+                           VerticalAlignment="Top"
+                           Height="5" />
+            </Grid>
         </Grid>
         <!--</Border>
                 <Border Name="StatusBar"
@@ -516,6 +573,8 @@ SOFTWARE.
                 Value="100" />
         <Setter Property="WindowFrameMode"
                 Value="CanMaximize" />
+        <Setter Property="ResizeMode"
+                Value="CanResize"></Setter>
         <Setter Property="SystemForeground"
                 Value="Black" />
         <Setter Property="SystemBackground"
