@@ -328,7 +328,7 @@ namespace WPFSpark
         /// </summary>
         public IEnumerable ItemsSource
         {
-            get { return (ObservableCollection<UIElement>)GetValue(ItemsSourceProperty); }
+            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
@@ -340,7 +340,7 @@ namespace WPFSpark
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var panel = (FluidWrapPanel)d;
-            var oldItemsSource = (ObservableCollection<UIElement>)e.OldValue;
+            var oldItemsSource = (IEnumerable)e.OldValue;
             var newItemsSource = panel.ItemsSource;
             panel.OnItemsSourceChanged(oldItemsSource, newItemsSource);
         }
