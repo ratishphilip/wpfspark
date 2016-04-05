@@ -1,5 +1,5 @@
 ﻿<!--
-// Copyright (c) 2015 Ratish Philip 
+// Copyright (c) 2016 Ratish Philip 
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +24,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2
+// WPFSpark v1.2.1
 // 
  -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -32,8 +32,8 @@
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:wpfspark="clr-namespace:WPFSpark">
 
-    <!-- ToggleSwitch Template -->
-    <ControlTemplate x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchTemplate}"
+    <!-- ToggleSwitch Basic Template -->
+    <ControlTemplate x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchBasicTemplate}"
                      TargetType="{x:Type wpfspark:ToggleSwitch}">
         <!-- PART_Content -->
         <!-- Outermost border of the ToggleSwitch -->
@@ -47,8 +47,8 @@
                              OptimizeClipRendering="{TemplateBinding OptimizeRendering}">
             <wpfspark:ClipBorder.Resources>
                 <wpfspark:ToggleSwitchProxy x:Key="TS_Proxy"
-                                       CheckedMargin="{Binding Path=CheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
-                                       UncheckedMargin="{Binding Path=UncheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}">
+                                            CheckedMargin="{Binding Path=CheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                            UncheckedMargin="{Binding Path=UncheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}">
                 </wpfspark:ToggleSwitchProxy>
             </wpfspark:ClipBorder.Resources>
             <!-- Visual States -->
@@ -163,13 +163,6 @@
                                FontSize="{TemplateBinding FontSize}"
                                Foreground="{TemplateBinding CheckedForeground}"
                                Effect="{TemplateBinding CheckedTextEffect}">
-                            <!--<TextBlock.Effect>
-                                <DropShadowEffect BlurRadius="4"
-                                                  ShadowDepth="1"
-                                                  Color="Black"
-                                                  Opacity="0.7"
-                                                  Direction="-88"></DropShadowEffect>
-                            </TextBlock.Effect>-->
                     </TextBlock>
 
                     <!-- Unchecked State -->
@@ -193,13 +186,6 @@
                                FontSize="{TemplateBinding FontSize}"
                                Foreground="{TemplateBinding UncheckedForeground}"
                                Effect="{TemplateBinding UncheckedTextEffect}">
-                        <!--<TextBlock.Effect>
-                            <DropShadowEffect BlurRadius="4"
-                                              ShadowDepth="1"
-                                              Color="Black"
-                                              Opacity="0.7"
-                                              Direction="-88"></DropShadowEffect>
-                        </TextBlock.Effect>-->
                     </TextBlock>
 
                     <!-- ToggleSwitch Thumb -->
@@ -246,52 +232,332 @@
                             Opacity="0">
                     </Border>
                 </Grid>
-                <!--</Border>-->
             </Canvas>
-            <!--</Grid>-->
         </wpfspark:ClipBorder>
+    </ControlTemplate>
 
-        <ControlTemplate.Triggers>
-            <!--<Trigger Property="IsEnabled"
-                     Value="false">
-                <Setter Property="Opacity"
-                        Value="0.3" />
-                <Setter TargetName="PART_UncheckedContent"
-                        Property="Foreground"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="PART_CheckedContent"
-                        Property="Foreground"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="DisabledBorder"
-                        Property="Opacity"
-                        Value="0.5"></Setter>
-            </Trigger>
-            <Trigger Property="ToggleButton.IsPressed"
-                     Value="True">
-                <Setter Property="Opacity"
-                        TargetName="Shine"
-                        Value="0.6" />
-            </Trigger>-->
-            <!--<Trigger Property="ToggleButton.IsMouseOver"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard Storyboard="{StaticResource BeginGlow}" />
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard Storyboard="{StaticResource EndGlow}" />
-                </Trigger.ExitActions>
-            </Trigger>-->
-        </ControlTemplate.Triggers>
+    <!-- Toggle Switch Basic Style -->
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.Basic.Style}"
+           TargetType="{x:Type wpfspark:ToggleSwitch}">
+        <Setter Property="SnapsToDevicePixels"
+                Value="True"></Setter>
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="FontSize"
+                Value="16"></Setter>
+        <Setter Property="MinWidth"
+                Value="100"></Setter>
+        <Setter Property="MinHeight"
+                Value="40"></Setter>
+        <Setter Property="Width"
+                Value="100"></Setter>
+        <Setter Property="Height"
+                Value="40"></Setter>
+        <Setter Property="IsCheckedLeft"
+                Value="True" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="CornerRadius"
+                Value="4" />
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="ThumbWidthRatio"
+                Value="0.35" />
+        <Setter Property="BorderThickness"
+                Value="2" />
+        <Setter Property="ThumbBorderThickness"
+                Value="2" />
+        <Setter Property="IsChecked"
+                Value="False" />
+        <Setter Property="CheckedForeground"
+                Value="Black" />
+        <Setter Property="UncheckedForeground"
+                Value="Black" />
+        <Setter Property="CheckedBackground"
+                Value="#4cd964" />
+        <Setter Property="UncheckedBackground"
+                Value="#ff9600" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0,0"
+                                     StartPoint="0,1">
+                    <GradientStop Color="#787878"
+                                  Offset="0" />
+                    <GradientStop Color="#A1A1A1"
+                                  Offset="0.5" />
+                    <GradientStop Color="#555555"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ThumbBackground">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                    <GradientStop Color="#C1C1C1"
+                                  Offset="0" />
+                    <GradientStop Color="#A5A5A5"
+                                  Offset="0.5" />
+                    <GradientStop Color="#FCFCF6"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ThumbBorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0,1"
+                                     StartPoint="0,0">
+                    <GradientStop Color="#F6F6F6"
+                                  Offset="0" />
+                    <GradientStop Color="#959595"
+                                  Offset="0.5" />
+                    <GradientStop Color="#565656"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CheckedText"
+                Value="Yes" />
+        <Setter Property="UncheckedText"
+                Value="No" />
+        <Setter Property="Template"
+                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchBasicTemplate}}" />
+    </Style>
+
+    <!-- ToggleSwitch Modern Template (for iOS / Windows Mobile look and feel )-->
+    <ControlTemplate x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchModernTemplate}"
+                     TargetType="{x:Type wpfspark:ToggleSwitch}">
+        <!-- PART_Content -->
+        <Grid x:Name="PART_OuterGrid">
+            <Grid.Resources>
+                <wpfspark:ToggleSwitchProxy x:Key="TS_Proxy"
+                                            CheckedMargin="{Binding Path=CheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                            UncheckedMargin="{Binding Path=UncheckedMargin, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}">
+                </wpfspark:ToggleSwitchProxy>
+            </Grid.Resources>
+            <!-- Visual States -->
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="MouseOver" />
+                    <VisualState x:Name="Pressed" />
+                    <VisualState x:Name="Disabled">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="DisabledBorder"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To=".55" />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="CheckStates">
+                    <VisualState x:Name="Checked">
+                        <Storyboard>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PART_ContentGrid"
+                                                              Storyboard.TargetProperty="Margin">
+                                <EasingThicknessKeyFrame x:Name="PART_CheckedKeyFrame"
+                                                         KeyTime="00:00:00.2"
+                                                         Value="{Binding Path=CheckedMargin, Source={StaticResource TS_Proxy}}">
+                                    <EasingThicknessKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingThicknessKeyFrame.EasingFunction>
+                                </EasingThicknessKeyFrame>
+                            </ThicknessAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_OuterAccentBorder"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_AccentThumb"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_OuterBorder"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Thumb"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <!-- ToggleSwitch supports only Two states -->
+                    <VisualState x:Name="Indeterminate" />
+                    <VisualState x:Name="Unchecked">
+                        <Storyboard>
+                            <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="PART_ContentGrid"
+                                                              Storyboard.TargetProperty="Margin">
+                                <EasingThicknessKeyFrame x:Name="PART_UncheckedKeyFrame"
+                                                         KeyTime="00:00:00.2"
+                                                         Value="{Binding Path=UncheckedMargin, Source={StaticResource TS_Proxy}}">
+                                    <EasingThicknessKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingThicknessKeyFrame.EasingFunction>
+                                </EasingThicknessKeyFrame>
+                            </ThicknessAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_OuterBorder"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Thumb"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_OuterAccentBorder"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_AccentThumb"
+                                                           Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="00:00:00.2"
+                                                      Value="0">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <QuarticEase  EasingMode="EaseIn" />
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="FocusStates">
+                    <VisualState x:Name="Focused" />
+                    <VisualState x:Name="Unfocused" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <!-- Outermost border of the ToggleSwitch which is shown when it is in Unchecked state-->
+            <wpfspark:ClipBorder x:Name="PART_OuterBorder"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"
+                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                 Background="{TemplateBinding Background}"
+                                 CornerRadius="{TemplateBinding CornerRadius}"
+                                 BorderThickness="{TemplateBinding BorderThickness}">
+            </wpfspark:ClipBorder>
+            <!-- Outermost border (having the accent color) of the ToggleSwitch which is shown when it is in Checked state-->
+            <wpfspark:ClipBorder x:Name="PART_OuterAccentBorder"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"
+                                 BorderBrush="{TemplateBinding AccentBrush}"
+                                 Background="{TemplateBinding AccentBrush}"
+                                 CornerRadius="{TemplateBinding CornerRadius}"
+                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                 IsHitTestVisible="False"
+                                 Opacity="0" />
+            <!-- Outermost border of the ToggleSwitch which is the container for the Thumb-->
+            <wpfspark:ClipBorder x:Name="PART_ThumbContainer"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"
+                                 BorderBrush="Transparent"
+                                 Background="Transparent"
+                                 CornerRadius="{TemplateBinding CornerRadius}"
+                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                 OptimizeClipRendering="{TemplateBinding OptimizeRendering}">
+                <Canvas Name="PART_RootCanvas"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Background="Transparent">
+                    <Grid Name="PART_ContentGrid"
+                          Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.4*"></ColumnDefinition>
+                            <ColumnDefinition Width="0.1*"></ColumnDefinition>
+                            <ColumnDefinition Width="0.1*"></ColumnDefinition>
+                            <ColumnDefinition Width="0.4*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- ToggleSwitch Thumb which is shown when ToggleSwitch is in Unchecked state-->
+                        <wpfspark:ClipBorder x:Name="PART_Thumb"
+                                             Grid.Column="1"
+                                             Grid.ColumnSpan="2"
+                                             Margin="0"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Stretch"
+                                             Width="{Binding Path=ThumbWidth, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             Height="{Binding Path=ThumbHeight, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             BorderBrush="{TemplateBinding ThumbBorderBrush}"
+                                             BorderThickness="{TemplateBinding ThumbBorderThickness}"
+                                             CornerRadius="{Binding Path=ThumbCornerRadius, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             Background="{TemplateBinding ThumbBackground}"
+                                             OptimizeClipRendering="{TemplateBinding OptimizeThumbRendering}">
+                            <Grid x:Name="PART_ThumbContentGrid"></Grid>
+                        </wpfspark:ClipBorder>
+                        <!-- ToggleSwitch Thumb with accent color which is shown when ToggleSwitch is in Checked state-->
+                        <wpfspark:ClipBorder x:Name="PART_AccentThumb"
+                                             IsHitTestVisible="False"
+                                             Grid.Column="1"
+                                             Grid.ColumnSpan="2"
+                                             Margin="0"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Stretch"
+                                             Width="{Binding Path=ThumbWidth, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             Height="{Binding Path=ThumbHeight, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             BorderBrush="{TemplateBinding AccentBrush}"
+                                             BorderThickness="{TemplateBinding ThumbBorderThickness}"
+                                             CornerRadius="{Binding Path=ThumbCornerRadius, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
+                                             Background="{TemplateBinding ThumbAccentBrush}"
+                                             OptimizeClipRendering="{TemplateBinding OptimizeThumbRendering}"
+                                             Opacity="0">
+                        </wpfspark:ClipBorder>
+
+                        <Border x:Name="DisabledBorder"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                BorderThickness="0"
+                                Margin="0"
+                                CornerRadius="0"
+                                Background="White"
+                                Opacity="0">
+                        </Border>
+                    </Grid>
+                </Canvas>
+            </wpfspark:ClipBorder>
+        </Grid>
     </ControlTemplate>
 
     <!-- Modify the color to change the accent color of the ToggleBrush.UWP.Light.Style and ToggleBrush.UWP.Dark.Style -->
     <Color x:Key="ActiveUWPColor"
            po:Freeze="true">#007aff</Color>
-    <!--<SolidColorBrush x:Key="ActiveUWPBrush"
+    <SolidColorBrush x:Key="ActiveUWPBrush"
                      po:Freeze="true"
-                     Color="{StaticResource ActiveUWPColor}"></SolidColorBrush>-->
+                     Color="{StaticResource ActiveUWPColor}"></SolidColorBrush>
 
-    <!-- Light Style for light background -->
+    <!-- UWP Light Style for light background -->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.UWP.Light.Style}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
         <Setter Property="FocusVisualStyle"
@@ -313,7 +579,7 @@
         <Setter Property="CornerRadius"
                 Value="20" />
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="White" />
         <Setter Property="ThumbWidthRatio"
                 Value="0.45" />
         <Setter Property="BorderThickness"
@@ -338,60 +604,17 @@
                 Value="" />
         <Setter Property="UncheckedText"
                 Value="" />
+        <Setter Property="AccentMode"
+                Value="System"></Setter>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource ActiveUWPBrush}"></Setter>
+        <Setter Property="ThumbAccentBrush"
+                Value="White"></Setter>
         <Setter Property="Template"
-                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchTemplate}}" />
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBackground).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="White"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Transparent"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBackground).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Black"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Black"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Transparent"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchModernTemplate}}" />
     </Style>
 
-    <!-- Dark Style for dark backgrounds -->
+    <!-- UWP Dark Style for dark backgrounds -->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.UWP.Dark.Style}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
         <Setter Property="FocusVisualStyle"
@@ -413,7 +636,7 @@
         <Setter Property="CornerRadius"
                 Value="20" />
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="Black" />
         <Setter Property="ThumbWidthRatio"
                 Value="0.45" />
         <Setter Property="BorderThickness"
@@ -438,80 +661,43 @@
                 Value="" />
         <Setter Property="UncheckedText"
                 Value="" />
+        <Setter Property="AccentBrush"
+                Value="#007aff"></Setter>
+        <Setter Property="ThumbAccentBrush"
+                Value="White"></Setter>
         <Setter Property="Template"
-                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchTemplate}}" />
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource ActiveUWPColor}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Transparent"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="White"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="Transparent"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchModernTemplate}}" />
     </Style>
 
     <!-- iOS Colors -->
-    <Color x:Key="iOS.Gray.Color"
-           po:Freeze="true">#8e8e93</Color>
-    <Color x:Key="iOS.Green.Color"
-           po:Freeze="true">#4cd964</Color>
-    <Color x:Key="iOS.LightBlue.Color"
-           po:Freeze="true">#5ac8fa</Color>
-    <Color x:Key="iOS.DarkBlue.Color"
-           po:Freeze="true">#34aadc</Color>
-    <Color x:Key="iOS.Blue.Color"
-           po:Freeze="true">#007aff</Color>
-    <Color x:Key="iOS.Yellow.Color"
-           po:Freeze="true">#ffcc00</Color>
-    <Color x:Key="iOS.Orange.Color"
-           po:Freeze="true">#ff9600</Color>
-    <Color x:Key="iOS.OrangeRed.Color"
-           po:Freeze="true">#ff3b30</Color>
-    <Color x:Key="iOS.Purple.Color"
-           po:Freeze="true">#5856d6</Color>
-    <Color x:Key="iOS.Pink.Color"
-           po:Freeze="true">#ff2d55</Color>
+    <SolidColorBrush x:Key="iOS.Gray.Brush"
+                     po:Freeze="true">#8e8e93</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Green.Brush"
+                     po:Freeze="true">#4cd964</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.LightBlue.Brush"
+                     po:Freeze="true">#5ac8fa</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.DarkBlue.Brush"
+                     po:Freeze="true">#34aadc</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Blue.Brush"
+                     po:Freeze="true">#007aff</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Yellow.Brush"
+                     po:Freeze="true">#ffcc00</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Orange.Brush"
+                     po:Freeze="true">#ff9600</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.OrangeRed.Brush"
+                     po:Freeze="true">#ff3b30</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Purple.Brush"
+                     po:Freeze="true">#5856d6</SolidColorBrush>
+    <SolidColorBrush x:Key="iOS.Pink.Brush"
+                     po:Freeze="true">#ff2d55</SolidColorBrush>
 
     <!-- Modify the value of iOS.Checked.Color, to one of the colors defined above,
          to change the accent color for ToggleSwitch.iOS.Light.Style -->
     <Color x:Key="iOS.Checked.Color"
            po:Freeze="true">#4cd964</Color>
-    <!--<SolidColorBrush x:Key="iOS.Checked.Brush"
+    <SolidColorBrush x:Key="iOS.Checked.Brush"
                      po:Freeze="true"
-                     Color="{StaticResource iOS.Checked.Color}"></SolidColorBrush>-->
+                     Color="{StaticResource iOS.Checked.Color}"></SolidColorBrush>
 
     <!-- Unchecked Color-->
     <Color x:Key="iOS.Unchecked.Color"
@@ -567,431 +753,86 @@
                 Value="" />
         <Setter Property="OptimizeRendering"
                 Value="True"></Setter>
+        <Setter Property="ThumbAccentBrush"
+                Value="White"></Setter>
+        <Setter Property="AccentMode"
+                Value="User"></Setter>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Checked.Brush}"></Setter>
         <Setter Property="Template"
-                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchTemplate}}" />
+                Value="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitchModernTemplate}}" />
     </Style>
 
     <!-- iOS Green Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Green.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Green.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Green.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Green.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Green.Brush}"></Setter>
     </Style>
 
     <!-- iOS Blue Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Blue.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Blue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Blue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Blue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Blue.Brush}"></Setter>
     </Style>
 
     <!-- iOS LightBlue Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.LightBlue.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.LightBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.LightBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.LightBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.LightBlue.Brush}"></Setter>
     </Style>
 
     <!-- iOS DarkBlue Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.DarkBlue.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.DarkBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.DarkBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.DarkBlue.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.DarkBlue.Brush}"></Setter>
     </Style>
 
     <!-- iOS Yellow Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Yellow.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Yellow.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Yellow.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Yellow.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Yellow.Brush}"></Setter>
     </Style>
 
     <!-- iOS Orange Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Orange.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Orange.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Orange.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Orange.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Orange.Brush}"></Setter>
     </Style>
 
     <!-- iOS OrangeRed Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.OrangeRed.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.OrangeRed.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.OrangeRed.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.OrangeRed.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.OrangeRed.Brush}"></Setter>
     </Style>
 
     <!-- iOS Purple Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Purple.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Purple.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Purple.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Purple.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Purple.Brush}"></Setter>
     </Style>
- 
+
     <!-- iOS Pink Style-->
     <Style x:Key="{ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Pink.Style}"
            BasedOn="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.iOS.Light.Style}}"
            TargetType="{x:Type wpfspark:ToggleSwitch}">
-        <Style.Triggers>
-            <Trigger Property="IsChecked"
-                     Value="True">
-                <Trigger.EnterActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Pink.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Pink.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Pink.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.EnterActions>
-                <Trigger.ExitActions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Background).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(BorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(ThumbBorderBrush).(Color)">
-                                <DiscreteColorKeyFrame KeyTime="00:00:00.2"
-                                                       Value="{StaticResource iOS.Unchecked.Color}"></DiscreteColorKeyFrame>
-                            </ColorAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </Trigger.ExitActions>
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="AccentBrush"
+                Value="{StaticResource iOS.Pink.Brush}"></Setter>
     </Style>
 
 </ResourceDictionary>

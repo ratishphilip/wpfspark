@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2
+// WPFSpark v1.2.1
 // 
 
 using System;

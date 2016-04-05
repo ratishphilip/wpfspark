@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2015 Ratish Philip 
+﻿// Copyright (c) 2016 Ratish Philip 
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2
+// WPFSpark v1.2.1
 // 
 
 using System.Windows;
@@ -32,6 +32,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
@@ -49,8 +50,23 @@ namespace WPFSpark
     [TemplatePart(Name = "PART_CheckedKeyFrame", Type = typeof(EasingThicknessKeyFrame))]
     [TemplatePart(Name = "PART_UncheckedKeyFrame", Type = typeof(EasingThicknessKeyFrame))]
     [TemplatePart(Name = "PART_ThumbContentGrid", Type = typeof(Grid))]
+    [TemplatePart(Name = "PART_OuterGrid", Type = typeof(Grid))]
     public class ToggleSwitch : ToggleButton
     {
+        #region Enums
+
+        /// <summary>
+        /// Enum which defines whether the ToggleSwitch should update it's checked background
+        /// witht the current Windows Accent color or user specified Accent color.
+        /// </summary>
+        public enum AccentModeType
+        {
+            System = 0,
+            User = 1,
+        }
+
+        #endregion
+
         #region Fields
 
         private Canvas _rootCanvas;
@@ -64,7 +80,9 @@ namespace WPFSpark
         private EasingThicknessKeyFrame _checkedKeyFrame;
         private EasingThicknessKeyFrame _uncheckedKeyFrame;
         private Grid _thumbContentGrid;
+        private Grid _outerGrid;
         private bool _isCalculatingLayout;
+
         #endregion
 
         #region Constants
@@ -853,6 +871,108 @@ namespace WPFSpark
 
         #endregion
 
+        #region AccentMode
+
+        /// <summary>
+        /// AccentMode Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty AccentModeProperty =
+            DependencyProperty.Register("AccentMode", typeof(AccentModeType), typeof(ToggleSwitch),
+                new FrameworkPropertyMetadata(AccentModeType.System));
+
+        /// <summary>
+        /// Gets or sets the AccentMode property. This dependency property 
+        /// indicates whether the ToggleSwitch should display the accent color (either
+        /// obtained from system or specified by the user).
+        /// </summary>
+        public AccentModeType AccentMode
+        {
+            get { return (AccentModeType)GetValue(AccentModeProperty); }
+            set { SetValue(AccentModeProperty, value); }
+        }
+
+        #endregion
+
+        #region AccentBrush
+
+        /// <summary>
+        /// AccentBrush Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty AccentBrushProperty =
+            DependencyProperty.Register("AccentBrush", typeof(Brush), typeof(ToggleSwitch),
+                new FrameworkPropertyMetadata(Brushes.Transparent, OnAccentBrushChanged, CoerceAccentBrush));
+
+        /// <summary>
+        /// Gets or sets the AccentBrush property. This dependency property 
+        /// indicates he accent color for the ToggleSwitch Background.
+        /// </summary>
+        public Brush AccentBrush
+        {
+            get { return (Brush)GetValue(AccentBrushProperty); }
+            set { SetValue(AccentBrushProperty, value); }
+        }
+
+        /// <summary>
+        /// Handles changes to the AccentBrush property.
+        /// </summary>
+        private static void OnAccentBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var toggleSwitch = (ToggleSwitch)d;
+            var oldAccentBrush = (Brush)e.OldValue;
+            var newAccentBrush = toggleSwitch.AccentBrush;
+            toggleSwitch.OnAccentBrushChanged(oldAccentBrush, newAccentBrush);
+        }
+
+        /// <summary>
+        /// Provides derived classes an opportunity to handle changes to the AccentBrush property.
+        /// </summary>
+        protected void OnAccentBrushChanged(Brush oldAccentBrush, Brush newAccentBrush)
+        {
+        }
+
+        /// <summary>
+        /// Coerces the AccentBrush value.
+        /// </summary>
+        private static object CoerceAccentBrush(DependencyObject d, object value)
+        {
+            var toggleSwitch = (ToggleSwitch)d;
+            var desiredAccentBrush = (Brush)value;
+
+            if (toggleSwitch.AccentMode == AccentModeType.System)
+            {
+                var accentColor = GetChromeColor();
+                if (accentColor != null)
+                {
+                    desiredAccentBrush = new SolidColorBrush(accentColor.Value);
+                }
+            }
+
+            return desiredAccentBrush;
+        }
+
+        #endregion
+
+        #region ThumbAccentBrush
+
+        /// <summary>
+        /// ThumbAccentBrush Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty ThumbAccentBrushProperty =
+            DependencyProperty.Register("ThumbAccentBrush", typeof(Brush), typeof(ToggleSwitch),
+                new FrameworkPropertyMetadata(Brushes.Transparent));
+
+        /// <summary>
+        /// Gets or sets the ThumbAccentBrush property. This dependency property 
+        /// indicates the accent color for the ToggleSwitch Thumb.
+        /// </summary>
+        public Brush ThumbAccentBrush
+        {
+            get { return (Brush)GetValue(ThumbAccentBrushProperty); }
+            set { SetValue(ThumbAccentBrushProperty, value); }
+        }
+
+        #endregion
+
         #endregion
 
         #region Construction
@@ -993,8 +1113,19 @@ namespace WPFSpark
             _outerBorder = GetChildControl<ClipBorder>("PART_OuterBorder");
             if (_outerBorder != null)
             {
-                // TS_Proxy
+                // TS_Proxy will be within PART_OuterBorder's Resources if 
+                // the ToggleSwitchBasicTemplate is applied to ToggleSwitch
                 _tsProxy = _outerBorder.Resources["TS_Proxy"] as ToggleSwitchProxy;
+                if (_tsProxy == null)
+                {
+                    // Otherwise, TS_Proxy will be within PART_OuterGrid's Resources if 
+                    // the ToggleSwitchModernTemplate is applied to ToggleSwitch
+                    _outerGrid = GetChildControl<Grid>("PART_OuterGrid");
+                    if (_outerGrid != null)
+                    {
+                        _tsProxy = _outerGrid.Resources["TS_Proxy"] as ToggleSwitchProxy;
+                    }
+                }
             }
             // PART_CheckedKeyFrame
             _checkedKeyFrame = GetChildControl<EasingThicknessKeyFrame>("PART_CheckedKeyFrame");
@@ -1269,6 +1400,43 @@ namespace WPFSpark
         }
 
         #endregion
+
+        #region InterOps
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmIsCompositionEnabled([MarshalAs(UnmanagedType.Bool)] out bool pfEnabled);
+
+        [DllImport("dwmapi.dll", PreserveSig = false)]
+        private static extern void DwmGetColorizationColor(out uint colorizationColor, [MarshalAs(UnmanagedType.Bool)]out bool colorizationOpaqueBlend);
+
+        public static Color? GetChromeColor()
+        {
+            bool isEnabled;
+            var hr1 = DwmIsCompositionEnabled(out isEnabled);
+            if ((hr1 != 0) || !isEnabled) // 0 means S_OK.
+                return null;
+
+            try
+            {
+                uint colorizationColor;
+                bool opaqueBlend;
+                DwmGetColorizationColor(out colorizationColor, out opaqueBlend);
+
+                // Convert colorization color parameter to Color.
+                var targetColor = Color.FromRgb(
+                    (byte)(colorizationColor >> 16),
+                    (byte)(colorizationColor >> 8),
+                    (byte)colorizationColor);
+
+                return targetColor;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -1333,5 +1501,4 @@ namespace WPFSpark
 
         #endregion
     }
-
 }

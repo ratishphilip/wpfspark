@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>WPFSpark</id>
-    <version>1.2.0.2</version>
+    <version>1.2.1</version>
     <title>WPFSpark</title>
     <authors>Ratish Philip</authors>
     <owners>Ratish Philip</owners>
@@ -11,8 +11,8 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>>WPFSpark is a library of rich user controls which can be used to enrich your application's UI.
 		The library contains the following controls - SprocketControl, ToggleSwitch, FluidWrapPanel, SparkWindow, FluidPivotPanel, FluidProgressBar and FluidStatusBar.</description>
-    <releaseNotes>The WPFSpark project has been ported to .NET 4.6.1 version. ToggleSwitch control and FluidWrapPanel have been rewritten from scratch to remove previous bugs and provide new features. Other controls within the project have received minor updates and features.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <releaseNotes>v1.2.1 includes updates to the ToggleSwitch control to support Windows Accent Color and other minor fixes.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
     <tags>WPFSpark</tags>
   </metadata>
   <files>
