@@ -1,4 +1,4 @@
-#<img src="https://cloud.githubusercontent.com/assets/7021835/12490663/887fcdde-c02b-11e5-9ff2-7fd33e4b5cd1.png" />
+#<img src="https://cloud.githubusercontent.com/assets/7021835/14302151/9f5307d0-fb52-11e5-8807-431c1f1b9f76.png" />
 
 **WPFSpark** project was started by me in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
 
