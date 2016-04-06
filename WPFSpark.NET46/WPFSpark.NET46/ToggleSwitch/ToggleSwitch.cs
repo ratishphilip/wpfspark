@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Data;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
+using Microsoft.Win32;
 using static System.String;
 
 namespace WPFSpark
@@ -940,10 +941,10 @@ namespace WPFSpark
 
             if (toggleSwitch.AccentMode == AccentModeType.System)
             {
-                var accentColor = GetChromeColor();
+                var accentColor = GetAccentColor();
                 if (accentColor != null)
                 {
-                    desiredAccentBrush = new SolidColorBrush(accentColor.Value);
+                    desiredAccentBrush = new SolidColorBrush(accentColor.Value);    
                 }
             }
 
@@ -992,26 +993,16 @@ namespace WPFSpark
         {
             _isCalculatingLayout = false;
 
+            // ===================================================================================
+            // NOTE: In order to ensure proper disposal of the ToggleSwitch,
+            // the following events must be unsubscribed to by calling the 'Cleanup' method from
+            // window hosting the ToggleSwitch
+            // ===================================================================================
             // Subscribe to the BorderThickness changed event to update the layout
-            EventHandler thicknessChangedEventHandler = (s, e) =>
-            {
-                // Update Layout
-                InvalidateVisual();
-            };
-
             var dpd = DependencyPropertyDescriptor.FromProperty(BorderThicknessProperty, typeof(ToggleSwitch));
-            dpd?.AddValueChanged(this, thicknessChangedEventHandler);
-
-            // When unloaded, unsubscribe from BorderThickness changed event 
-            // to ensure proper disposal of ToggleSwitch
-            RoutedEventHandler unloadedEventHandler = null;
-            unloadedEventHandler = (s, e) =>
-            {
-                Unloaded -= unloadedEventHandler;
-                dpd?.RemoveValueChanged(this, thicknessChangedEventHandler);
-            };
-
-            Unloaded += unloadedEventHandler;
+            dpd?.AddValueChanged(this, OnThicknessChanged);
+            // Subscribe to the UserPreferenceChanged event to know if the user changes accent color
+            SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
         }
 
         #endregion
@@ -1409,7 +1400,11 @@ namespace WPFSpark
         [DllImport("dwmapi.dll", PreserveSig = false)]
         private static extern void DwmGetColorizationColor(out uint colorizationColor, [MarshalAs(UnmanagedType.Bool)]out bool colorizationOpaqueBlend);
 
-        public static Color? GetChromeColor()
+        /// <summary>
+        /// Obtains the current Accent Color
+        /// </summary>
+        /// <returns>Current Accent Color</returns>
+        public static Color? GetAccentColor()
         {
             bool isEnabled;
             var hr1 = DwmIsCompositionEnabled(out isEnabled);
@@ -1423,10 +1418,16 @@ namespace WPFSpark
                 DwmGetColorizationColor(out colorizationColor, out opaqueBlend);
 
                 // Convert colorization color parameter to Color.
-                var targetColor = Color.FromRgb(
-                    (byte)(colorizationColor >> 16),
-                    (byte)(colorizationColor >> 8),
-                    (byte)colorizationColor);
+                var colorbytes = new byte[4];
+                colorbytes[0] = (byte)((0xFF000000 & colorizationColor) >> 24); // A
+                // When the color preference is set to be automatically picked from background
+                // the the Alpha value is returned as 0. In that case set it to 255 to get the solid color
+                if (colorbytes[0] == 0)
+                    colorbytes[0] = 255;
+                colorbytes[1] = (byte)((0x00FF0000 & colorizationColor) >> 16); // R
+                colorbytes[2] = (byte)((0x0000FF00 & colorizationColor) >> 8); // G
+                colorbytes[3] = (byte)(0x000000FF & colorizationColor); // B
+                var targetColor = Color.FromArgb(colorbytes[0], colorbytes[1], colorbytes[2], colorbytes[3]);
 
                 return targetColor;
             }
@@ -1434,6 +1435,52 @@ namespace WPFSpark
             {
                 return null;
             }
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handles the Thickness Changed Event to update the layout
+        /// </summary>
+        /// <param name="sender">ToggleSwitch</param>
+        /// <param name="e">EventArgs</param>
+        private void OnThicknessChanged(object sender, EventArgs e)
+        {
+            // Update Layout
+            InvalidateVisual();
+        }
+
+        /// <summary>
+        /// Handles the UserPreferenceChanged System Event
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">EventArgs</param>
+        private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            // The Category is General when the user changes color preference
+            if ((AccentMode == AccentModeType.System) &&(e.Category == UserPreferenceCategory.General))
+            {
+                // Set the AccentBrush to any value to reload the system accent color into ToggleSwitch
+                AccentBrush = Brushes.Red;
+            }
+        }
+
+        #endregion
+
+        #region APIs
+
+        /// <summary>
+        /// This method should be called by the Window hosting the ToggleSwitch, when the window is closed.
+        /// This will ensure proper disposal of the ToggleSwitch object.
+        /// </summary>
+        public void Cleanup()
+        {
+            var dpd = DependencyPropertyDescriptor.FromProperty(BorderThicknessProperty, typeof(ToggleSwitch));
+            dpd?.RemoveValueChanged(this, OnThicknessChanged);
+
+            SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
         }
 
         #endregion

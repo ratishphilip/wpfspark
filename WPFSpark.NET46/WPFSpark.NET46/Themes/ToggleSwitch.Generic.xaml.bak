@@ -234,31 +234,6 @@
                 </Grid>
             </Canvas>
         </wpfspark:ClipBorder>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled"
-                     Value="false">
-                <Setter Property="Opacity"
-                        Value="0.8" />
-                <Setter TargetName="PART_UncheckedContent"
-                        Property="Foreground"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="PART_OuterBorder"
-                        Property="Background"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="PART_CheckedContent"
-                        Property="Foreground"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="DisabledBorder"
-                        Property="Opacity"
-                        Value="0.5"></Setter>
-            </Trigger>
-            <Trigger Property="ToggleButton.IsPressed"
-                     Value="True">
-                <Setter Property="Opacity"
-                        TargetName="Shine"
-                        Value="0.6" />
-            </Trigger>
-        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <!-- Toggle Switch Basic Style -->
@@ -535,7 +510,7 @@
                                              VerticalAlignment="Stretch"
                                              Width="{Binding Path=ThumbWidth, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
                                              Height="{Binding Path=ThumbHeight, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
-                                             BorderBrush="Transparent"
+                                             BorderBrush="{TemplateBinding ThumbBorderBrush}"
                                              BorderThickness="{TemplateBinding ThumbBorderThickness}"
                                              CornerRadius="{Binding Path=ThumbCornerRadius, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
                                              Background="{TemplateBinding ThumbBackground}"
@@ -552,7 +527,7 @@
                                              VerticalAlignment="Stretch"
                                              Width="{Binding Path=ThumbWidth, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
                                              Height="{Binding Path=ThumbHeight, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
-                                             BorderBrush="Transparent"
+                                             BorderBrush="{TemplateBinding AccentBrush}"
                                              BorderThickness="{TemplateBinding ThumbBorderThickness}"
                                              CornerRadius="{Binding Path=ThumbCornerRadius, RelativeSource={RelativeSource AncestorType={x:Type wpfspark:ToggleSwitch}}}"
                                              Background="{TemplateBinding ThumbAccentBrush}"
@@ -573,22 +548,6 @@
                 </Canvas>
             </wpfspark:ClipBorder>
         </Grid>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsEnabled"
-                     Value="false">
-                <Setter Property="Opacity"
-                        Value="0.8" />
-                <Setter TargetName="PART_OuterBorder"
-                        Property="BorderBrush"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="PART_OuterAccentBorder"
-                        Property="BorderBrush"
-                        Value="LightGray"></Setter>
-                <Setter TargetName="DisabledBorder"
-                        Property="Opacity"
-                        Value="0.5"></Setter>
-            </Trigger>
-        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <!-- Modify the color to change the accent color of the ToggleBrush.UWP.Light.Style and ToggleBrush.UWP.Dark.Style -->
