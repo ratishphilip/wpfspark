@@ -1,11 +1,18 @@
-#<img src="https://cloud.githubusercontent.com/assets/7021835/14302151/9f5307d0-fb52-11e5-8807-431c1f1b9f76.png" />
+#<img src="https://cloud.githubusercontent.com/assets/7021835/16716844/ccd12f24-46bc-11e6-9a99-37d69e7c623b.png" />
 
 **WPFSpark** project was started by me in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
 
 **WPFSpark v1.0** was released in December 2011 followed by **WPFSpark v1.1** in January 2012. Now, after a really long gap of nearly 4 years, I am happy to announce that the next version of WPFSpark is finally released. :) It has been ported to **.NET 4.6** using **C# 6.0**.
 
-### WPFSpark.UWP Released
-I am really happy to announce that today (Jan 21, 2016), the WPFSpark library for Universal Windows Apps is released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
+## Updates
+
+### WPFSpark v1.3 Release (Jul 10, 2016)
+WPFSpark v1.3 is now released. The following updates were made
+- The Layout logic for **FluidWrapPanel** has been updated with a more robust code.
+- WPFSpark project target DotNet Framework has been upgraded to **4.6.2**.
+
+### WPFSpark.UWP Released (Jan 21, 2016)
+WPFSpark library for Universal Windows Apps is now released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
 
 ## WPFSpark Controls
 
