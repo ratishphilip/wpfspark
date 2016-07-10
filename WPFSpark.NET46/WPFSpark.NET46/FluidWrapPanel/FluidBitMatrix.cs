@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2.1
+// WPFSpark v1.3
 // 
 
 using System;
@@ -33,6 +33,31 @@ using System.Windows.Controls;
 namespace WPFSpark
 {
     /// <summary>
+    /// Represents a bit location within the BitMatrix
+    /// </summary>
+    internal struct MatrixCell
+    {
+        internal long Row;
+        internal long Col;
+
+        internal MatrixCell(long row, long col)
+        {
+            Row = row;
+            Col = col;
+        }
+
+        internal bool IsValid()
+        {
+            return (Row >= 0) && (Col >= 0);
+        }
+
+        internal static MatrixCell InvalidCell()
+        {
+            return new MatrixCell(-1, -1);
+        }
+    }
+
+    /// <summary>
     /// Encapsulates bit based representation of data using
     /// 64 bit unsigned long numbers. In case of Vertical
     /// Orientation the matrix is stored as a transposed matrix i.e.
@@ -41,30 +66,6 @@ namespace WPFSpark
     /// </summary>
     internal sealed class FluidBitMatrix
     {
-        #region Structures and Enums
-
-        /// <summary>
-        /// Represents a bit location within the BitMatrix
-        /// </summary>
-        internal struct MatrixCell
-        {
-            internal long Row { get; }
-            internal long Col { get; }
-
-            internal MatrixCell(long row, long col)
-            {
-                Row = row;
-                Col = col;
-            }
-
-            internal bool IsValid()
-            {
-                return (Row >= 0) && (Col >= 0);
-            }
-        }
-
-        #endregion
-
         #region Constants
 
         // Maximum number of bits an item can occupy in a resultRow
@@ -85,7 +86,7 @@ namespace WPFSpark
         // Storage for the bits
         private readonly UInt64[] _data;
         // Stores the mask for each bit within a cell
-        private static UInt64[] _mask;
+        private static readonly UInt64[] Mask;
         // Number of Cells required for each resultRow. If _columnsInternal is
         // not a multiple of BitsPerCell, then add an additional cell
         // to each resultRow
@@ -120,10 +121,10 @@ namespace WPFSpark
         static FluidBitMatrix()
         {
             // Define the mask bits
-            _mask = new UInt64[BitsPerCell];
+            Mask = new UInt64[BitsPerCell];
             for (var i = 0; i < BitsPerCell; i++)
             {
-                _mask[i] = (UInt64)1 << i;
+                Mask[i] = (UInt64)1 << i;
             }
         }
 
@@ -167,15 +168,18 @@ namespace WPFSpark
         #region APIs
 
         /// <summary>
-        /// Finds the next empty region of given width and height starting
-        /// from the startIndex row
+        /// Tries to find an empty region of given width and height starting
+        /// from the startIndex row.
         /// </summary>
         /// <param name="startIndex">The row to start the search from</param>
         /// <param name="width">Width of the Region</param>
         /// <param name="height">Height of the Region</param>
-        /// <returns></returns>
-        internal MatrixCell FindRegion(long startIndex, int width, int height)
+        /// <param name="cell">The cell location</param>
+        /// <returns>true if successful otherwise false</returns>
+        internal bool TryFindRegion(long startIndex, int width, int height, out MatrixCell cell)
         {
+            cell = MatrixCell.InvalidCell();
+
             // Swap width and height if the BitOrientation is Vertical
             if ((BitOrientation == Orientation.Vertical) && (width != height))
             {
@@ -184,43 +188,37 @@ namespace WPFSpark
                 height = temp;
             }
 
-            var invalidCell = new MatrixCell(-1, -1);
-
-            if (startIndex < 0 || startIndex >= _rowsInternal)
-                throw new ArgumentOutOfRangeException(nameof(startIndex));
-
-            if (startIndex + (height - 1) >= _rowsInternal)
-                throw new ArgumentOutOfRangeException(nameof(width), $"Cannot fit item having height of {height} rows in {_rowsInternal - startIndex} rows!");
-
-            if ((width < 1) || (width > 60))
-                throw new ArgumentOutOfRangeException(nameof(width), $"Length of the item must be in the range 1 - {MaxBitsPerItem}!");
-
-            if (width > _columnsInternal)
-                throw new ArgumentOutOfRangeException(nameof(width), $"Length cannot be greater than number of columns in the BitMatrix!");
+            if ((startIndex < 0 || startIndex >= _rowsInternal) ||
+                (startIndex + (height - 1) >= _rowsInternal) ||
+                ((width < 1) || (width > MaxBitsPerItem)) ||
+                (width > _columnsInternal))
+                return false;
 
             // Optimization: If both width and height are 1 then use a faster 
-            // loop to find the next empty bit
+            // loop to find the next empty cell
             if ((width == 1) && (height == 1))
             {
                 for (var row = startIndex; row < _rowsInternal; row++)
                 {
                     for (var col = 0; col < _columnsInternal; col++)
                     {
-                        if (!this[row, col])
-                        {
-                            // Swap the row and col values if the BitOrientation is Vertical
-                            return (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, col) : new MatrixCell(col, row);
-                        }
+                        // Is the cell unset?
+                        if (this[row, col])
+                            continue;
+
+                        // Swap the row and col values if the BitOrientation is Vertical
+                        cell = (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, col) : new MatrixCell(col, row);
+                        return true;
                     }
                 }
 
                 // If the code has reached here it means that it did not find any unset
-                // bit in the entire _data. Simply return from here.
-                return invalidCell;
+                // bit in the entire matrix. Return false from here.
+                return false;
             }
 
             var mask = (((UInt64)1) << width) - 1;
-            for (var row = startIndex; row < _rowsInternal; row++)
+            for (var row = startIndex; row < (_rowsInternal - height + 1); row++)
             {
                 // Quickcheck: If the row is empty then no need to check individual bits in the row
                 if (!RowHasData(row))
@@ -230,19 +228,20 @@ namespace WPFSpark
                     if (!AnyBitsSetInRegion(row, 0, width, height))
                     {
                         // Swap the row and col values if the BitOrientation is Vertical
-                        return (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, 0) : new MatrixCell(0, row);
+                        cell = (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, 0) : new MatrixCell(0, row);
+                        return true;
                     }
                 }
 
                 // Row is not empty and has some set bits.  Check if there are
                 // 'width' continuous unset bits in the column.
                 // 1. Check the first 'width' bits
-                var rowData = (UInt64)0;
+                var rowData = 0UL;
                 var col = 0;
                 for (; col < width; col++)
                 {
                     rowData <<= 1;
-                    rowData |= this[row, col] ? (UInt64)1 : (UInt64)0;
+                    rowData |= this[row, col] ? 1UL : 0UL;
                 }
                 if ((rowData & mask) == 0)
                 {
@@ -252,7 +251,8 @@ namespace WPFSpark
                     if (!AnyBitsSetInRegion(row, 0, width, height))
                     {
                         // Swap the row and col values if the BitOrientation is Vertical
-                        return (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, 0) : new MatrixCell(0, row);
+                        cell = (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, 0) : new MatrixCell(0, row);
+                        return true;
                     }
                 }
 
@@ -264,7 +264,7 @@ namespace WPFSpark
                 {
                     rowData <<= 1;
                     rowData &= mask;
-                    rowData |= this[row, col++] ? (UInt64)1 : (UInt64)0;
+                    rowData |= this[row, col++] ? 1UL : 0UL;
                     colBegin++;
 
                     if ((rowData & mask) != 0)
@@ -277,11 +277,12 @@ namespace WPFSpark
                         continue;
 
                     // Swap the row and col values if the BitOrientation is Vertical
-                    return (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, colBegin) : new MatrixCell(colBegin, row);
+                    cell = (BitOrientation == Orientation.Horizontal) ? new MatrixCell(row, colBegin) : new MatrixCell(colBegin, row);
+                    return true;
                 }
             }
 
-            return invalidCell;
+            return false;
         }
 
         /// <summary>
@@ -293,39 +294,32 @@ namespace WPFSpark
         /// <param name="height">Height of the Region</param>
         internal void SetRegion(MatrixCell location, int width, int height)
         {
-            if (BitOrientation == Orientation.Horizontal)
-            {
-                // Optimization: If the region is only 1 bit wide and high
-                if ((width == 1) && (height == 1))
-                {
-                    this[location.Row, location.Col] = true;
-                    return;
-                }
+            long targetRow = location.Row;
+            long targetCol = location.Col;
+            int targetWidth = width;
+            int targetHeight = height;
 
-                for (var row = 0; row < height; row++)
-                {
-                    for (var col = 0; col < width; col++)
-                    {
-                        this[location.Row + row, location.Col + col] = true;
-                    }
-                }
-            }
             // Interchange Row & Column and width & height if the BitOrientation is Vertical
-            else
+            if (BitOrientation == Orientation.Vertical)
             {
-                // Optimization: If the region is only 1 bit wide and high
-                if ((width == 1) && (height == 1))
-                {
-                    this[location.Col, location.Row] = true;
-                    return;
-                }
+                targetRow = location.Col;
+                targetCol = location.Row;
+                targetWidth = height;
+                targetHeight = width;
+            }
 
-                for (var row = 0; row < width; row++)
+            // Optimization: If the region is only 1 bit wide and high
+            if ((targetWidth == 1) && (targetHeight == 1))
+            {
+                this[targetRow, targetCol] = true;
+                return;
+            }
+
+            for (var row = 0; row < targetHeight; row++)
+            {
+                for (var col = 0; col < targetWidth; col++)
                 {
-                    for (var col = 0; col < height; col++)
-                    {
-                        this[location.Col + row, location.Row + col] = true;
-                    }
+                    this[targetRow + row, targetCol + col] = true;
                 }
             }
         }
@@ -349,7 +343,7 @@ namespace WPFSpark
         {
             for (long i = 0; i < _data.LongLength; i++)
             {
-                _data[i] = (UInt64)0;
+                _data[i] = 0UL;
             }
         }
 
@@ -377,7 +371,7 @@ namespace WPFSpark
                 // To obtain the mask offset, get (resultColumn % 64), which can be
                 // obtained faster by doing (resultColumn AND 63) i.e. (resultColumn & 0x3F)
                 var maskOffset = column & 0x3F;
-                return (_data[offset] & _mask[maskOffset]) != 0;
+                return (_data[offset] & Mask[maskOffset]) != 0;
             }
             set
             {
@@ -395,12 +389,12 @@ namespace WPFSpark
                 if (value)
                 {
                     // Set bit
-                    _data[offset] |= _mask[maskOffset];
+                    _data[offset] |= Mask[maskOffset];
                 }
                 else
                 {
                     // Reset bit
-                    _data[offset] &= ~(_mask[maskOffset]);
+                    _data[offset] &= ~(Mask[maskOffset]);
                 }
             }
         }
@@ -455,7 +449,7 @@ namespace WPFSpark
                 for (var colOffset = 0; colOffset < width; colOffset++)
                 {
                     rowData <<= 1;
-                    rowData |= this[row + rowOffset, col + colOffset] ? (UInt64)1 : (UInt64)0;
+                    rowData |= this[row + rowOffset, col + colOffset] ? 1UL : 0UL;
                 }
 
                 // If the bit is not set, move to next bit

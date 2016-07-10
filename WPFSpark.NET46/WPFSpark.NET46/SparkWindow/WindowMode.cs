@@ -20,14 +20,11 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE. 
-
-// -------------------------------------------------------------------------------
 // 
 // This file is part of the WPFSpark project: http://wpfspark.codeplex.com/
 // 
-// WPFSpark v1.2.1
+// WPFSpark v1.3
 //
-// -------------------------------------------------------------------------------
 
 
 namespace WPFSpark

@@ -231,7 +231,8 @@
                                    Grid.Column="1"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
-                                   Style="{StaticResource {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.UWP.Dark.Style}}" />
+                                   Style="{StaticResource 
+                {ComponentResourceKey TypeInTargetAssembly=wpfspark:ToggleSwitch, ResourceId=ToggleSwitch.UWP.Dark.Style}}" />
 
             <!-- iOS Styles -->
             <Border Grid.Row="2"

@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2.1
+// WPFSpark v1.3
 // 
 
 using System.Windows;
@@ -88,9 +88,9 @@ namespace WPFSpark
 
         #region Constants
 
-        private const double DEFAULT_THUMB_WIDTH_RATIO = 0.4;
-        private const double MIN_THUMB_WIDTH_RATIO = 0.1;
-        private const double MAX_THUMB_WIDTH_RATIO = 0.9;
+        private const double DefaultThumbWidthRatio = 0.4;
+        private const double MinThumbWidthRatio = 0.1;
+        private const double MaxThumbWidthRatio = 0.9;
 
         #endregion
 
@@ -523,7 +523,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty ThumbWidthRatioProperty =
             DependencyProperty.Register("ThumbWidthRatio", typeof(double), typeof(ToggleSwitch),
-                new FrameworkPropertyMetadata(DEFAULT_THUMB_WIDTH_RATIO, OnThumbWidthRatioChanged, CoerceThumbWidthRatio));
+                new FrameworkPropertyMetadata(DefaultThumbWidthRatio, OnThumbWidthRatioChanged, CoerceThumbWidthRatio));
 
         /// <summary>
         /// Gets or sets the ThumbWidthRatio property. This dependency property 
@@ -566,14 +566,14 @@ namespace WPFSpark
         {
             var desiredThumbWidthRatio = (double)value;
 
-            if (desiredThumbWidthRatio < MIN_THUMB_WIDTH_RATIO)
+            if (desiredThumbWidthRatio < MinThumbWidthRatio)
             {
-                desiredThumbWidthRatio = MIN_THUMB_WIDTH_RATIO;
+                desiredThumbWidthRatio = MinThumbWidthRatio;
             }
 
-            if (desiredThumbWidthRatio > MAX_THUMB_WIDTH_RATIO)
+            if (desiredThumbWidthRatio > MaxThumbWidthRatio)
             {
-                desiredThumbWidthRatio = MAX_THUMB_WIDTH_RATIO;
+                desiredThumbWidthRatio = MaxThumbWidthRatio;
             }
 
             return desiredThumbWidthRatio;

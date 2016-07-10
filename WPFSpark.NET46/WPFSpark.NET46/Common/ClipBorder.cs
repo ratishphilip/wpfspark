@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.2.1
+// WPFSpark v1.3
 // 
 
 using System;
@@ -99,9 +99,9 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty PaddingProperty =
             DependencyProperty.Register("Padding", typeof(Thickness), typeof(ClipBorder),
-                new FrameworkPropertyMetadata(new Thickness(),
-                                              FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-                                              OnPaddingChanged), OnValidateThickness);
+                                        new FrameworkPropertyMetadata(new Thickness(),
+                                              FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender), 
+                                        OnValidateThickness);
 
         /// <summary>
         /// Gets or sets the Padding property. This dependency property 
@@ -111,17 +111,6 @@ namespace WPFSpark
         {
             get { return (Thickness)GetValue(PaddingProperty); }
             set { SetValue(PaddingProperty, value); }
-        }
-
-        /// <summary>
-        /// Handles changes to the Padding property.
-        /// </summary>
-        /// <param name="d">ClipBorder</param>
-		/// <param name="e">DependencyProperty changed event arguments</param>
-        private static void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var target = (ClipBorder)d;
-
         }
 
         //      /// <summary>
@@ -144,8 +133,8 @@ namespace WPFSpark
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.Register("CornerRadius", typeof(CornerRadius), typeof(ClipBorder),
                 new FrameworkPropertyMetadata(new CornerRadius(),
-                    FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-                    OnCornerRadiusChanged), OnValidateCornerRadius);
+                    FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender), 
+                OnValidateCornerRadius);
 
         /// <summary>
         /// Gets or sets the CornerRadius property. This dependency property 
@@ -168,19 +157,6 @@ namespace WPFSpark
             return cr.IsValid(false, false, false, false);
         }
 
-        /// <summary>
-        /// Handles changes to the CornerRadius property.
-        /// </summary>
-        /// <param name="d">ClipBorder</param>
-		/// <param name="e">DependencyProperty changed event arguments</param>
-        private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var target = (ClipBorder)d;
-            //var oldCornerRadius = (CornerRadius)e.OldValue;
-            //var newCornerRadius = target.CornerRadius;
-            //target.OnCornerRadiusChanged(oldCornerRadius, newCornerRadius);
-        }
-
         //      /// <summary>
         //      /// Provides derived classes an opportunity to handle changes to the CornerRadius property.
         //      /// </summary>
@@ -200,7 +176,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty BorderBrushProperty =
             DependencyProperty.Register("BorderBrush", typeof(Brush), typeof(ClipBorder),
-                new FrameworkPropertyMetadata((Brush)null,
+                new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender));
 
         /// <summary>
@@ -222,7 +198,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty BackgroundProperty =
             DependencyProperty.Register("Background", typeof(Brush), typeof(ClipBorder),
-                new FrameworkPropertyMetadata((Brush)null,
+                new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender));
 
         /// <summary>

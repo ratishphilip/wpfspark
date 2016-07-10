@@ -25,7 +25,7 @@
 // 
 // This file is part of the WPFSpark project: http://wpfspark.codeplex.com/
 // 
-// WPFSpark v1.2.1
+// WPFSpark v1.3
 //
 // -------------------------------------------------------------------------------
 
@@ -92,8 +92,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty TitleImageProperty =
             DependencyProperty.Register("TitleImage", typeof(UIElement), typeof(SparkWindow),
-                new PropertyMetadata(null,
-                    new PropertyChangedCallback(OnTitleImageChanged)));
+                new PropertyMetadata(null, OnTitleImageChanged));
 
         /// <summary>
         /// Gets or sets the TitleImage property. This dependency property 
@@ -137,8 +136,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty TitleImageMarginProperty =
             DependencyProperty.Register("TitleImageMargin", typeof(Thickness), typeof(SparkWindow),
-                new PropertyMetadata(new Thickness(),
-                    new PropertyChangedCallback(OnTitleImageMarginChanged)));
+                new PropertyMetadata(new Thickness(), OnTitleImageMarginChanged));
 
         /// <summary>
         /// Gets or sets the TitleImageMargin property. This dependency property 
@@ -182,7 +180,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty TitleMarginProperty =
             DependencyProperty.Register("TitleMargin", typeof(Thickness), typeof(SparkWindow),
-                new FrameworkPropertyMetadata(new Thickness(4, 0, 0, 0), new PropertyChangedCallback(OnTitleMarginChanged)));
+                new FrameworkPropertyMetadata(new Thickness(4, 0, 0, 0), OnTitleMarginChanged));
 
         /// <summary>
         /// Gets or sets the TitleMargin property. This dependency property 
@@ -211,12 +209,10 @@ namespace WPFSpark
         /// Provides derived classes an opportunity to handle changes to the TitleMargin property.
         /// </summary>
         /// <param name="oldTitleMargin">Old Value</param>
-        /// <param name="margin">New Value</param>
+        /// <param name="newTitleMargin">New Value</param>
         protected virtual void OnTitleMarginChanged(Thickness oldTitleMargin, Thickness newTitleMargin)
         {
-            TextBlock tb = this.GetChildControl<TextBlock>("PART_TitleText");
-            if (tb == null)
-                return;
+            //TextBlock tb = GetChildControl<TextBlock>("PART_TitleText");
 
             //UpdateTriggerMargin(tb, newTitleMargin);
         }
@@ -229,8 +225,8 @@ namespace WPFSpark
         /// TitleEffect Dependency Property
         /// </summary>
         public static readonly DependencyProperty TitleEffectProperty =
-            DependencyProperty.Register("TitleEffect", typeof(Effect), typeof(SparkWindow),
-                new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTitleEffectChanged)));
+            DependencyProperty.Register("TitleEffect", typeof(Effect), typeof(SparkWindow), 
+                new FrameworkPropertyMetadata(OnTitleEffectChanged));
 
         /// <summary>
         /// Gets or sets the TitleEffect property. This dependency property 
@@ -274,8 +270,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty TitleBackgroundProperty =
             DependencyProperty.Register("TitleBackground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.Transparent,
-                    new PropertyChangedCallback(OnTitleBackgroundChanged)));
+                new PropertyMetadata(Brushes.Transparent, OnTitleBackgroundChanged));
 
         /// <summary>
         /// Gets or sets the TitleBackground property. This dependency property 
@@ -319,8 +314,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty WindowFrameModeProperty =
             DependencyProperty.Register("WindowFrameMode", typeof(WindowMode), typeof(SparkWindow),
-                new FrameworkPropertyMetadata(WindowMode.Pane,
-                    new PropertyChangedCallback(OnWindowFrameModeChanged)));
+                new FrameworkPropertyMetadata(WindowMode.Pane, OnWindowFrameModeChanged));
 
         /// <summary>
         /// Gets or sets the WindowFrameMode property. This dependency property 
@@ -364,8 +358,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemBorderBrushProperty =
             DependencyProperty.Register("SystemBorderBrush", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemBorderBrushChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemBorderBrushChanged));
 
         /// <summary>
         /// Gets or sets the SystemBorderBrush property. This dependency property 
@@ -409,8 +402,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemBorderThicknessProperty =
             DependencyProperty.Register("SystemBorderThickness", typeof(Thickness), typeof(SparkWindow),
-                new PropertyMetadata(new Thickness(0.5),
-                    new PropertyChangedCallback(OnSystemBorderThicknessChanged)));
+                new PropertyMetadata(new Thickness(0.5), OnSystemBorderThicknessChanged));
 
         /// <summary>
         /// Gets or sets the SystemBorderThickness property. This dependency property 
@@ -454,8 +446,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemForegroundProperty =
             DependencyProperty.Register("SystemForeground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemForegroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemForegroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemForeground property. This dependency property 
@@ -499,8 +490,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemBackgroundProperty =
             DependencyProperty.Register("SystemBackground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemBackgroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemBackgroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemBackground property. This dependency property 
@@ -544,8 +534,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemMouseOverBorderBrushProperty =
             DependencyProperty.Register("SystemMouseOverBorderBrush", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemMouseOverBorderBrushChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemMouseOverBorderBrushChanged));
 
         /// <summary>
         /// Gets or sets the SystemMouseOverBorderBrush property. This dependency property 
@@ -589,8 +578,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemMouseOverForegroundProperty =
             DependencyProperty.Register("SystemMouseOverForeground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemMouseOverForegroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemMouseOverForegroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemMouseOverForeground property. This dependency property 
@@ -634,8 +622,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemMouseOverBackgroundProperty =
             DependencyProperty.Register("SystemMouseOverBackground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemMouseOverBackgroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemMouseOverBackgroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemMouseOverBackground property. This dependency property 
@@ -679,8 +666,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemPressedBorderBrushProperty =
             DependencyProperty.Register("SystemPressedBorderBrush", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemPressedBorderBrushChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemPressedBorderBrushChanged));
 
         /// <summary>
         /// Gets or sets the SystemPressedBorderBrush property. This dependency property 
@@ -724,8 +710,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemPressedBorderThicknessProperty =
             DependencyProperty.Register("SystemPressedBorderThickness", typeof(Thickness), typeof(SparkWindow),
-                new PropertyMetadata(new Thickness(0.5),
-                    new PropertyChangedCallback(OnSystemPressedBorderThicknessChanged)));
+                new PropertyMetadata(new Thickness(0.5), OnSystemPressedBorderThicknessChanged));
 
         /// <summary>
         /// Gets or sets the SystemPressedBorderThickness property. This dependency property 
@@ -769,8 +754,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemPressedForegroundProperty =
             DependencyProperty.Register("SystemPressedForeground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemPressedForegroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemPressedForegroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemPressedForeground property. This dependency property 
@@ -814,8 +798,7 @@ namespace WPFSpark
         /// </summary>
         public static readonly DependencyProperty SystemPressedBackgroundProperty =
             DependencyProperty.Register("SystemPressedBackground", typeof(Brush), typeof(SparkWindow),
-                new PropertyMetadata(Brushes.White,
-                    new PropertyChangedCallback(OnSystemPressedBackgroundChanged)));
+                new PropertyMetadata(Brushes.White, OnSystemPressedBackgroundChanged));
 
         /// <summary>
         /// Gets or sets the SystemPressedBackground property. This dependency property 
@@ -1055,21 +1038,6 @@ namespace WPFSpark
                         _restoreButton.Visibility = Visibility.Collapsed;
                     break;
 
-                // Only minimize and close buttons should be visible if the mode is Pane/CanMinimize
-                case WindowMode.Pane:
-                case WindowMode.CanMinimize:
-                default:
-                    if (_minimizeButton != null)
-                    {
-                        _minimizeButton.Visibility = Visibility.Visible;
-                        Grid.SetColumn(_minimizeButton, 2);
-                    }
-                    if (_maximizeButton != null)
-                        _maximizeButton.Visibility = Visibility.Collapsed;
-                    if (_restoreButton != null)
-                        _restoreButton.Visibility = Visibility.Collapsed;
-                    break;
-
                 // All buttons - minimize, maximize and close will be visible if the mode is CanMaximize
                 case WindowMode.CanMaximize:
                     if (_minimizeButton != null)
@@ -1093,6 +1061,21 @@ namespace WPFSpark
                     if (_closeButton != null)
                         _closeButton.Visibility = Visibility.Collapsed;
                     break;
+                // Only minimize and close buttons should be visible if the mode is Pane/CanMinimize
+                case WindowMode.Pane:
+                case WindowMode.CanMinimize:
+                default:
+                    if (_minimizeButton != null)
+                    {
+                        _minimizeButton.Visibility = Visibility.Visible;
+                        Grid.SetColumn(_minimizeButton, 2);
+                    }
+                    if (_maximizeButton != null)
+                        _maximizeButton.Visibility = Visibility.Collapsed;
+                    if (_restoreButton != null)
+                        _restoreButton.Visibility = Visibility.Collapsed;
+                    break;
+
             }
 
             // If the mode is Pane/PaneCanClose then the window should be in maximized state
@@ -1139,8 +1122,7 @@ namespace WPFSpark
         /// <param name="lParam"></param>
         /// <param name="handled"></param>
         /// <returns></returns>
-        private static System.IntPtr WindowProc(System.IntPtr hwnd, int msg, System.IntPtr wParam,
-              System.IntPtr lParam, ref bool handled)
+        private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch (msg)
             {
@@ -1181,7 +1163,7 @@ namespace WPFSpark
         /// </summary>
         /// <param name="sender">Window</param>
         /// <param name="e">EventArgs</param>
-        private void OnWindowSourceInitialized(object sender, System.EventArgs e)
+        private void OnWindowSourceInitialized(object sender, EventArgs e)
         {
             IntPtr handle = (new WindowInteropHelper(this)).Handle;
             HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
@@ -1290,8 +1272,6 @@ namespace WPFSpark
                 case "ResizeSE":
                     Cursor = Cursors.SizeNWSE;
                     break;
-                default:
-                    break;
             }
         }
 
@@ -1359,8 +1339,6 @@ namespace WPFSpark
                 case "ResizeSE":
                     Cursor = Cursors.SizeNWSE;
                     ResizeWindow(ResizeDirection.BottomRight);
-                    break;
-                default:
                     break;
             }
         }
