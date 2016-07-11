@@ -11,6 +11,8 @@ WPFSpark v1.3 is now released. The following updates were made
 - The Layout logic for **FluidWrapPanel** has been updated with a more robust code.
 - WPFSpark project target DotNet Framework has been upgraded to **4.6.2**.
 
+> _**Note: If you are installing this version in your project, please ensure that your project is also targetting the version 4.6.2 of the DotNet Framework.**_
+
 ### WPFSpark.UWP Released (Jan 21, 2016)
 WPFSpark library for Universal Windows Apps is now released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
 
@@ -27,6 +29,18 @@ More details available [here](https://www.nuget.org/packages/WPFSpark/).
 ## WPFSpark Controls
 
 WPFSpark contains the following controls
+
+- [ClipBorder](#clipborder)
+- [SprocketControl](#sprocketcontrol)
+- [ToggleSwitch](#toggleswitch)
+- [FluidWrapPanel](#fluidwrappanel)
+- [SparkWindow](#sparkwindow)
+- [FluidPivotPanel](#fluidpivotpanel)
+- [FluidProgressBar](#fluidprogressbar)
+- [FluidStatusBar](#fluidstatusbar)
+
+###ClipBorder
+**ClipBorder** is similar to to **Border** class with an additional feature. It clips its content within its boundaries. It derives from the **Decorator** class and provides the same dependency properties as the **Border** class. You can set the `CornerRadius` property of the **ClipBorder** to obtain a Rounded Rectangular clip. **ClipBorder** powers the **ToggleSwitch** control.
 
 ###SprocketControl
 **SprocketControl** is a circular progress control similar to the Asynchronous Circular Progress Indicator in Mac OS X. It can behave as either normal or indeterminate progress control.
