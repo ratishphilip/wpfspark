@@ -14,6 +14,16 @@ WPFSpark v1.3 is now released. The following updates were made
 ### WPFSpark.UWP Released (Jan 21, 2016)
 WPFSpark library for Universal Windows Apps is now released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
 
+# Installing from NuGet
+
+To install **WPFSpark**, run the following command in the **Package Manager Console**
+
+```
+Install-Package WPFSpark
+```
+
+More details available [here](https://www.nuget.org/packages/WPFSpark/).
+
 ## WPFSpark Controls
 
 WPFSpark contains the following controls
