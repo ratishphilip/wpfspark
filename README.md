@@ -11,7 +11,7 @@ WPFSpark v1.3 is now released. The following updates were made
 - The Layout logic for **FluidWrapPanel** has been updated with a more robust code.
 - WPFSpark project target DotNet Framework has been upgraded to **4.6.2**.
 
-> _**Note: If you are installing this version in your project, please ensure that your project is also targetting the version 4.6.2 of the DotNet Framework.**_
+> _**Note: If you are installing this version in your project, please ensure that your project is also targeting the version 4.6.2 of the DotNet Framework.**_
 
 ### WPFSpark.UWP Released (Jan 21, 2016)
 WPFSpark library for Universal Windows Apps is now released. Check this [blog](https://wpfspark.wordpress.com/2016/01/21/wpfspark-uwp-creating-a-single-nuget-package-containing-x86-x64-and-arm-binaries/) for more details.
