@@ -6,6 +6,11 @@
 
 ## Updates
 
+### WPFSpark.UWP retired (Jul 16, 2016)
+The **WPFSPark.UWP** project has been officially retired. Henceforth, the **WPFSpark** project will only contain WPF related code and controls.  
+Those who were using the UWP version of **FluidWrapPanel** need not worry. **FluidWrapPanel** has been ported from **WPFSpark  v1.3**, its XAML animation replaced with **Composition** animations and is now a part of the **[CompositionProToolkit](https://github.com/ratishphilip/CompositionProToolkit)** project.
+**CompositionProToolkit v0.3** has been released containing the new **FluidWrapPanel** control.
+
 ### WPFSpark v1.3 Release (Jul 10, 2016)
 WPFSpark v1.3 is now released. The following updates were made
 - The Layout logic for **FluidWrapPanel** has been updated with a more robust code.
