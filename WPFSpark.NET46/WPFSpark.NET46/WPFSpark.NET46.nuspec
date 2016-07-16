@@ -8,6 +8,7 @@
     <owners>Ratish Philip</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ratishphilip/wpfspark</projectUrl>
+    <iconUrl>https://cloud.githubusercontent.com/assets/7021835/16895130/522996ea-4b20-11e6-8f3a-0642c8fb22ba.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>>WPFSpark is a library of rich user controls which can be used to enrich your application's UI.
 		The library contains the following controls - SprocketControl, ToggleSwitch, FluidWrapPanel, SparkWindow, FluidPivotPanel, FluidProgressBar and FluidStatusBar.</description>
