@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(NuGetPackageRoot)' == ''">
-    <NuGetPackageRoot>$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
-  </PropertyGroup>
-  <ImportGroup>
-    <Import Project="$(NuGetPackageRoot)\Microsoft.DotNet.BuildTools.GenAPI\1.0.0-beta-00081\build\Microsoft.DotNet.BuildTools.GenAPI.targets" Condition="Exists('$(NuGetPackageRoot)\Microsoft.DotNet.BuildTools.GenAPI\1.0.0-beta-00081\build\Microsoft.DotNet.BuildTools.GenAPI.targets')" />
-  </ImportGroup>
-</Project>
