@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2016 Ratish Philip 
+﻿// Copyright (c) 2017 Ratish Philip 
 //
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 //
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
-// WPFSpark v1.3
+// WPFSpark v1.3.1
 // 
 
 using System;
@@ -37,7 +37,7 @@ namespace WPFSpark
     /// Represents a border whose contents are clipped within the bounds
     /// of the border. The border may have rounded corners.
     /// </summary>
-    internal class ClipBorder : Decorator
+    public sealed class ClipBorder : Decorator
     {
         #region Fields
 
