@@ -1,4 +1,4 @@
-#<img src="https://cloud.githubusercontent.com/assets/7021835/16895129/52220bdc-4b20-11e6-871d-33924f086ef7.png" />
+<img src="https://cloud.githubusercontent.com/assets/7021835/16895129/52220bdc-4b20-11e6-871d-33924f086ef7.png" />
 
 **WPFSpark** project was started by me in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
 
@@ -25,7 +25,7 @@ WPFSpark library for Universal Windows Apps is now released. Check this [blog](h
 
 To install **WPFSpark**, run the following command in the **Package Manager Console**
 
-```
+```powershell
 Install-Package WPFSpark
 ```
 
@@ -44,17 +44,17 @@ WPFSpark contains the following controls
 - [FluidProgressBar](#fluidprogressbar)
 - [FluidStatusBar](#fluidstatusbar)
 
-###ClipBorder
+### ClipBorder
 **ClipBorder** is similar to to **Border** class with an additional feature. It clips its content within its boundaries. It derives from the **Decorator** class and provides the same dependency properties as the **Border** class. You can set the `CornerRadius` property of the **ClipBorder** to obtain a Rounded Rectangular clip. **ClipBorder** powers the **ToggleSwitch** control.
 
-###SprocketControl
+### SprocketControl
 **SprocketControl** is a circular progress control similar to the Asynchronous Circular Progress Indicator in Mac OS X. It can behave as either normal or indeterminate progress control.
 
 [SprocketControl Details](http://www.codeproject.com/Articles/203966/WPFSpark-of-n-SprocketControl)
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12405766/de797bd6-bdfb-11e5-91e1-6389f017d9f4.png" />
 
-###ToggleSwitch
+### ToggleSwitch
 
 **ToggleSwitch** control derives from **ToggleButton** and supports only two states: `True` or `False`. This control has been completely rewritten from scratch and provides many properties which allow the user to customize the look and feel of the control (e.g. Windows 10 mobile style or iOS style). Users can create their own customized styles.
 
@@ -64,35 +64,35 @@ WPFSpark contains the following controls
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362238/10141a0c-bb77-11e5-9949-5021405e3334.png" />
 
-###FluidWrapPanel
+### FluidWrapPanel
 **FluidWrapPanel** is another control which derives from **Panel** and provides the functionality of a WrapPanel with an added advantage - *the child elements of the panel can be easily rearranged by simple drag and drop*. It has been rewritten from scratch to accommodate children of non-uniform size.
 
 [FluidWrapPanel Details](http://www.codeproject.com/Articles/244134/WPFSpark-of-n-FluidWrapPanel). Also check [this](http://www.codeproject.com/Articles/1060961/WPFSpark-v) for new features added in WPFSpark v1.2.
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362226/040ef8a8-bb77-11e5-8cef-30f1c3a8d11d.png" />
 
-###SparkWindow
+### SparkWindow
 **SparkWindow** is a custom Window which has the look and feel of Windows 10 desktop window with an additional feature : **Blur behind (Aero glass effect)**.
 
 [SparkWindow Details](http://www.codeproject.com/Articles/303688/WPFSpark-of-n-SparkWindow). Also check [this](http://www.codeproject.com/Articles/1060961/WPFSpark-v) for new features added in WPFSpark v1.2.
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362259/27ee7082-bb77-11e5-9a35-ea5422d49e75.png" />
 
-###FluidPivotPanel
+### FluidPivotPanel
 **FluidPivotPanel** is inspired from the **PivotControl** of Windows Phone 7/8/8.1.
 
 [FluidPivotPanel Details](http://www.codeproject.com/Articles/303690/WPFSpark-of-n-FluidPivotPanel)
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362258/27ee4f94-bb77-11e5-96a8-1b019310fd5e.png" />
 
-###FluidProgressBar
+### FluidProgressBar
 **FluidProgressBar** is inspired from the Indeterminate ProgressBar of Windows Phone 7/8/8.1.
 
 [FluidProgressBar Details](http://www.codeproject.com/Articles/303694/WPFSpark-of-n-FluidProgressBar)
 
 <img src="https://cloud.githubusercontent.com/assets/7021835/12362260/27ef7004-bb77-11e5-802f-2f64e4f9dc1d.png" />
 
-###FluidStatusBar
+### FluidStatusBar
 **FluidStatusBar** is a custom control used to display status messages to the user. Whenever the status is updated, the previous status message slides out and fades out. At the same time, the new message fades in.
 
 [FluidStatusBar Details](http://www.codeproject.com/Articles/303697/WPFSpark-of-n-FluidStatusBar)
