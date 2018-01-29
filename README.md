@@ -1,3 +1,4 @@
+
 <img src="https://user-images.githubusercontent.com/7021835/35534920-d2410822-04f6-11e8-9de1-87da10468172.png" />
 
 **WPFSpark** project was started by me in December 2009, with the aim of creating a library of rich user controls which can be used by the developer community. Initially, I ported the Circular Progress Control (which I had developed using C# and GDI+) to WPF. Eventually, as I gained more experience in WPF, I added more controls.
@@ -5,6 +6,15 @@
 **WPFSpark v1.0** was released in December 2011 followed by **WPFSpark v1.1** in January 2012. Now, after a really long gap of nearly 4 years, I am happy to announce that the next version of WPFSpark is finally released. :) It has been ported to **.NET 4.6** using **C# 6.0**.
 
 ## Updates
+
+### WPFSpark v1.4 (Jan 29, 2018)
+**WPFSpark** now supports the following dot Net Frameworks
+- 4.6
+- 4.6.1
+- 4.6.2
+- 4.7
+- 4.7.1
+- 4.7.2
 
 ### WPFSpark.UWP retired (Jul 16, 2016)
 The **WPFSPark.UWP** project has been officially retired. Henceforth, the **WPFSpark** project will only contain WPF related code and controls.  
