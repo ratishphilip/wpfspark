@@ -1,0 +1,8 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/WPFSpark;component/Themes/ToggleSwitch.Generic.xaml" />
+        <ResourceDictionary Source="/WPFSpark;component/Themes/SparkWindow.Generic.Glass.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
