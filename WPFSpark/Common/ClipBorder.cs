@@ -21,6 +21,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE. 
 //
+// This file is based on the System.Windows.Controls.Border class
+// https://referencesource.microsoft.com/#PresentationFramework/src/Framework/System/Windows/Controls/Border.cs
+//
 // This file is part of the WPFSpark project: https://github.com/ratishphilip/wpfspark
 //
 // WPFSpark v1.3.1
