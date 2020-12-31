@@ -1,5 +1,5 @@
 
-<img src="https://user-images.githubusercontent.com/7021835/35534920-d2410822-04f6-11e8-9de1-87da10468172.png" />
+<img src="https://user-images.githubusercontent.com/7021835/103419292-45c17680-4b47-11eb-84fb-503d3b0acd8d.png" />
 
 # WPFSpark v1.5 Released (Dec 31, 2020)
 This release can now be used with dotnet core 3.1 and 5.0 apps.
