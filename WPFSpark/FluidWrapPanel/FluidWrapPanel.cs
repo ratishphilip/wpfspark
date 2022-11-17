@@ -34,6 +34,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -113,6 +114,7 @@ namespace WPFSpark
         private Point _dragStartPoint;
         private UIElement _dragElement;
         private UIElement _lastDragElement;
+        private bool _isDragging;
         private bool _isOptimized;
         private Size _panelSize;
         private int _cellsPerLine;
@@ -945,19 +947,12 @@ namespace WPFSpark
             if ((child == null) || (!IsComposing))
                 return;
 
-            // Call the event handler core on the Dispatcher. (Improves efficiency!)
-            await Dispatcher.InvokeAsync(() =>
-            {
-                child.Opacity = DragOpacity;
-                child.SetValue(ZIndexProperty, ZIndexDrag);
-                // Capture further mouse events
-                child.CaptureMouse();
-                _dragElement = child;
-                _lastDragElement = null;
+            _dragStartPoint = position;
+            _dragElement = child;
+            _lastDragElement = null;
+            _isDragging = false;
 
-                // Since we are scaling the dragElement by DragScale, the clickPoint also shifts
-                _dragStartPoint = new Point(position.X * DragScale, position.Y * DragScale);
-            });
+            await Task.CompletedTask;
         }
 
         /// <summary>
@@ -971,52 +966,77 @@ namespace WPFSpark
             if ((child == null) || (!IsComposing) || (_dragElement == null))
                 return;
 
-            // Call the event handler core on the Dispatcher. (Improves efficiency!)
-            await Dispatcher.InvokeAsync(() =>
+            if (!_isDragging)
             {
-                _dragElement.RenderTransform = CreateTransform(positionInParent.X - _dragStartPoint.X,
-                                                               positionInParent.Y - _dragStartPoint.Y,
-                                                               DragScale,
-                                                               DragScale);
+                Vector diff = _dragStartPoint - position;
 
-                // Are all the children are of unit cell size?
-                if (_isOptimized)
+                if (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                    Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
-                    // Get the index of the dragElement
-                    var dragCellIndex = FluidItems.IndexOf(_dragElement);
-
-                    // Get the index in the fluidElements list corresponding to the current mouse location
-                    var index = GetIndexFromPoint(positionInParent);
-
-                    // If no valid cell index is obtained (happens when the dragElement is dragged outside
-                    // the FluidWrapPanel), add the child to the end of the fluidElements list.
-                    if ((index == -1) || (index >= FluidItems.Count))
+                    // Call the event handler core on the Dispatcher. (Improves efficiency!)
+                    await Dispatcher.InvokeAsync( () =>
                     {
-                        index = FluidItems.Count - 1;
-                    }
+                        child.Opacity = DragOpacity;
+                        child.SetValue(ZIndexProperty, ZIndexDrag);
+                        // Capture further mouse events
+                        child.CaptureMouse();
 
-                    // If both indices are same no need to process further
-                    if (index == dragCellIndex)
-                        return;
-
-                    // Move the dragElement to the new index
-                    FluidItems.RemoveAt(dragCellIndex);
-                    FluidItems.Insert(index, _dragElement);
-
-                    // Refresh the FluidWrapPanel
-                    InvalidateVisual();
+                        // Since we are scaling the dragElement by DragScale, the clickPoint also shifts
+                        _dragStartPoint = new Point(position.X * DragScale, position.Y * DragScale);
+                        _isDragging = true;
+                    } );
                 }
-                // Children are not having unit cell size
-                else
+            }
+
+            if (_isDragging)
+            {
+                // Call the event handler core on the Dispatcher. (Improves efficiency!)
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    // Refresh the FluidWrapPanel only if the dragElement
-                    // can be successfully placed in the new location
-                    if (TryFluidDrag(position, positionInParent))
+                    _dragElement.RenderTransform = CreateTransform(positionInParent.X - _dragStartPoint.X,
+                                                                   positionInParent.Y - _dragStartPoint.Y,
+                                                                   DragScale,
+                                                                   DragScale);
+
+                    // Are all the children are of unit cell size?
+                    if (_isOptimized)
                     {
+                        // Get the index of the dragElement
+                        var dragCellIndex = FluidItems.IndexOf(_dragElement);
+
+                        // Get the index in the fluidElements list corresponding to the current mouse location
+                        var index = GetIndexFromPoint(positionInParent);
+
+                        // If no valid cell index is obtained (happens when the dragElement is dragged outside
+                        // the FluidWrapPanel), add the child to the end of the fluidElements list.
+                        if ((index == -1) || (index >= FluidItems.Count))
+                        {
+                            index = FluidItems.Count - 1;
+                        }
+
+                        // If both indices are same no need to process further
+                        if (index == dragCellIndex)
+                            return;
+
+                        // Move the dragElement to the new index
+                        FluidItems.RemoveAt(dragCellIndex);
+                        FluidItems.Insert(index, _dragElement);
+
+                        // Refresh the FluidWrapPanel
                         InvalidateVisual();
                     }
-                }
-            });
+                    // Children are not having unit cell size
+                    else
+                    {
+                        // Refresh the FluidWrapPanel only if the dragElement
+                        // can be successfully placed in the new location
+                        if (TryFluidDrag(position, positionInParent))
+                        {
+                            InvalidateVisual();
+                        }
+                    }
+                });
+            }
         }
 
         /// <summary>
@@ -1205,7 +1225,7 @@ namespace WPFSpark
         /// <param name="positionInParent">Position where the user clicked w.r.t. the FluidWrapPanel (the parentFWPanel of the UIElement being dragged</param>
         internal async Task EndFluidDragAsync(UIElement child, Point position, Point positionInParent)
         {
-            if ((child == null) || (!IsComposing) || (_dragElement == null))
+            if ((child == null) || (!IsComposing) || (_dragElement == null) || (!_isDragging))
                 return;
 
             // Call the event handler core on the Dispatcher. (Improves efficiency!)
@@ -1226,6 +1246,7 @@ namespace WPFSpark
                 _lastDragElement = _dragElement;
 
                 _dragElement = null;
+                _isDragging = false;
                 _lastExchangedElement = null;
 
                 InvalidateVisual();
