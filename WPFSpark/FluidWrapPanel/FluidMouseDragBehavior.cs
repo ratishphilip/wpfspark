@@ -27,7 +27,6 @@
 // 
 
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Xaml.Behaviors;
@@ -42,7 +41,7 @@ namespace WPFSpark
         #region Fields
 
         FluidWrapPanel _parentFwPanel;
-        ListBoxItem _parentLbItem;
+        UIElement _fwPanelChild;
 
         #endregion
 
@@ -92,17 +91,11 @@ namespace WPFSpark
             GetParentPanel();
 
             // Subscribe to the Mouse down/move/up events
-            if (_parentLbItem != null)
+            if (_fwPanelChild != null)
             {
-                _parentLbItem.PreviewMouseDown += OnPreviewMouseDown;
-                _parentLbItem.PreviewMouseMove += OnPreviewMouseMove;
-                _parentLbItem.PreviewMouseUp   += OnPreviewMouseUp;
-            }
-            else
-            {
-                AssociatedObject.PreviewMouseDown += OnPreviewMouseDown;
-                AssociatedObject.PreviewMouseMove += OnPreviewMouseMove;
-                AssociatedObject.PreviewMouseUp   += OnPreviewMouseUp;
+                _fwPanelChild.PreviewMouseDown += OnPreviewMouseDown;
+                _fwPanelChild.PreviewMouseMove += OnPreviewMouseMove;
+                _fwPanelChild.PreviewMouseUp   += OnPreviewMouseUp;
             }
         }
 
@@ -113,27 +106,27 @@ namespace WPFSpark
         /// </summary>
         private void GetParentPanel()
         {
-            if ((AssociatedObject as FrameworkElement) == null)
-                return;
+            _fwPanelChild = AssociatedObject;
 
-            var ancestor = (FrameworkElement) AssociatedObject;
-
-            while (ancestor != null)
+            while (_fwPanelChild != null)
             {
-                if (ancestor is ListBoxItem)
-                {
-                    _parentLbItem = ancestor as ListBoxItem;
-                }
+                // Get the visual parent of the current item
+                var parent = VisualTreeHelper.GetParent(_fwPanelChild) as UIElement;
 
-                if (ancestor is FluidWrapPanel)
+                if (parent == null)
                 {
-                    _parentFwPanel = ancestor as FluidWrapPanel;
-                    // No need to go further up
+                    _fwPanelChild = null;
+                }
+                else if (parent is FluidWrapPanel)
+                {
+                    _parentFwPanel = (FluidWrapPanel) parent;
+                    // Search finished
                     return;
                 }
-
-                // Find the visual ancestor of the current item
-                ancestor = VisualTreeHelper.GetParent(ancestor) as FrameworkElement;
+                else
+                {
+                    _fwPanelChild = parent;
+                }
             }
         }
 
@@ -143,17 +136,11 @@ namespace WPFSpark
                 return;
 
             ((FrameworkElement) AssociatedObject).Loaded -= OnAssociatedObjectLoaded;
-            if (_parentLbItem != null)
+            if (_fwPanelChild != null)
             {
-                _parentLbItem.PreviewMouseDown -= OnPreviewMouseDown;
-                _parentLbItem.PreviewMouseMove -= OnPreviewMouseMove;
-                _parentLbItem.PreviewMouseUp -= OnPreviewMouseUp;
-            }
-            else
-            {
-                AssociatedObject.PreviewMouseDown -= OnPreviewMouseDown;
-                AssociatedObject.PreviewMouseMove -= OnPreviewMouseMove;
-                AssociatedObject.PreviewMouseUp -= OnPreviewMouseUp;
+                _fwPanelChild.PreviewMouseDown -= OnPreviewMouseDown;
+                _fwPanelChild.PreviewMouseMove -= OnPreviewMouseMove;
+                _fwPanelChild.PreviewMouseUp -= OnPreviewMouseUp;
             }
         }
 
@@ -166,13 +153,8 @@ namespace WPFSpark
             if (e.ChangedButton != DragButton)
                 return;
 
-            var position = _parentLbItem != null ? e.GetPosition(_parentLbItem) : e.GetPosition(AssociatedObject);
-
-            var fElem = AssociatedObject as FrameworkElement;
-            if ((fElem != null) && (_parentFwPanel != null))
-            {
-                await _parentFwPanel.BeginFluidDragAsync(_parentLbItem ?? AssociatedObject, position);
-            }
+            var position = e.GetPosition(_fwPanelChild);
+            await _parentFwPanel.BeginFluidDragAsync(_fwPanelChild, position);
         }
 
         private async void OnPreviewMouseMove(object sender, MouseEventArgs e)
@@ -216,14 +198,9 @@ namespace WPFSpark
             if (!isDragging)
                 return;
 
-            var position = _parentLbItem != null ? e.GetPosition(_parentLbItem) : e.GetPosition(AssociatedObject);
-
-            var fElem = AssociatedObject as FrameworkElement;
-            if ((fElem == null) || (_parentFwPanel == null))
-                return;
-
+            var position = e.GetPosition(_fwPanelChild);
             var positionInParent = e.GetPosition(_parentFwPanel);
-            await _parentFwPanel.FluidDragAsync(_parentLbItem ?? AssociatedObject, position, positionInParent);
+            await _parentFwPanel.FluidDragAsync(_fwPanelChild, position, positionInParent);
         }
 
         private async void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -231,14 +208,9 @@ namespace WPFSpark
             if (e.ChangedButton != DragButton)
                 return;
 
-            var position = _parentLbItem != null ? e.GetPosition(_parentLbItem) : e.GetPosition(AssociatedObject);
-
-            var fElem = AssociatedObject as FrameworkElement;
-            if ((fElem == null) || (_parentFwPanel == null))
-                return;
-
+            var position = e.GetPosition(_fwPanelChild);
             var positionInParent = e.GetPosition(_parentFwPanel);
-            await _parentFwPanel.EndFluidDragAsync(_parentLbItem ?? AssociatedObject, position, positionInParent);
+            await _parentFwPanel.EndFluidDragAsync(_fwPanelChild, position, positionInParent);
         }
 
         #endregion
